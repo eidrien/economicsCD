@@ -42,8 +42,8 @@ public class PipelineTest {
 	@Test
 	public void codebaseWithErrorsAndTestsGetsBlockedByPipeline(){
 		codebase = new Codebase();
-		codebase.addCommit(new ErrorCommit());
-		codebase.addCommit(new TestCommit());
+		codebase.addCommit(new ErrorCommit(1));
+		codebase.addCommit(new TestCommit(1));
 	}
 
 	private void thenFailsInProd() {
@@ -52,7 +52,7 @@ public class PipelineTest {
 
 	private Codebase givenCodebaseWithErrorsAndNoTests() {
 		codebase = new Codebase();
-		codebase.addCommit(new ErrorCommit());
+		codebase.addCommit(new ErrorCommit(1));
 		return codebase;
 	}
 

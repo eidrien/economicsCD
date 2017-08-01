@@ -50,7 +50,7 @@ public class CodebaseTest {
 	}
 
 	private void whenTestCommitIsAdded() {
-		codebase.addCommit(new TestCommit());
+		codebase.addCommit(new TestCommit(1));
 	}
 
 	private void thenHasErrors() {
@@ -58,7 +58,7 @@ public class CodebaseTest {
 	}
 
 	private void whenErrorCommitIsAdded() {
-		codebase.addCommit(new ErrorCommit());
+		codebase.addCommit(new ErrorCommit(1));
 	}
 
 	private void thenNumberOfFunctionalities(int totalFunctionalities) {
@@ -66,7 +66,7 @@ public class CodebaseTest {
 	}
 
 	private void whenAddingNewFunctionalCommit() {
-		codebase.addCommit(new FunctionalityCommit());
+		codebase.addCommit(new FunctionalityCommit(1));
 	}
 
 	private void thenHasNoErrors() {

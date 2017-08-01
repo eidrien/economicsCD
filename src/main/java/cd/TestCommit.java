@@ -1,5 +1,10 @@
 package cd;
 
-public class TestCommit implements Commit {
+public class TestCommit extends Commit {
+
+	public TestCommit(int functionalityId) {
+		super(functionalityId);
+		// TODO Auto-generated constructor stub
+	}
 
 }

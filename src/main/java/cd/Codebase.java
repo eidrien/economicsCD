@@ -3,10 +3,11 @@ package cd;
 public class Codebase {
 
 	int numberOfFunctionalities;
-	boolean hasErrors, hasTests;
+	boolean hasFunctionality, hasErrors, hasTests;
 	
 	public Codebase(){
 		numberOfFunctionalities = 0;
+		hasFunctionality = false;
 		hasErrors = false;
 		hasTests = false;
 	}
@@ -14,9 +15,18 @@ public class Codebase {
 	public boolean hasErrors() {
 		return hasErrors;
 	}
+	
+	public boolean hasTests() {
+		return hasTests;
+	}
+
+	public boolean hasFunctionality(){
+		return hasFunctionality;
+	}
 
 	public void addCommit(FunctionalityCommit commit) {
 		numberOfFunctionalities++;
+		hasFunctionality = true;
 	}
 
 	public int getNumberOfFunctionalities() {
@@ -29,10 +39,6 @@ public class Codebase {
 
 	public void addCommit(TestCommit testCommit) {
 		hasTests = true;		
-	}
-
-	public boolean hasTests() {
-		return hasTests;
 	}
 
 }
