@@ -38,6 +38,21 @@ public class CodebaseTest {
 		thenHasErrors();
 	}
 
+	@Test
+	public void testCommitAddsTest(){
+		givenNewCodebase();
+		whenTestCommitIsAdded();
+		thenHasTests();
+	}
+	
+	private void thenHasTests() {
+		assertTrue(codebase.hasTests());
+	}
+
+	private void whenTestCommitIsAdded() {
+		codebase.addCommit(new TestCommit());
+	}
+
 	private void thenHasErrors() {
 		assertTrue(codebase.hasErrors());
 	}

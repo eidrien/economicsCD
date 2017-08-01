@@ -9,6 +9,7 @@ import org.junit.Test;
 public class PipelineTest {
 
 	Pipeline pipeline;
+	Codebase codebase;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -21,16 +22,45 @@ public class PipelineTest {
 
 	@Test
 	public void emptyCodebaseMakesItToProd() {
-		Codebase codebase = new Codebase();
-		whenRunThroughPipeline(codebase);
+		givenNewCodebase();
+		whenRunThroughPipeline();
 		thenNoErrorsDetected();
+	}
+
+	private void givenNewCodebase() {
+		codebase = new Codebase();
+	}
+	
+	@Test
+	public void codebaseWithErrorsAndNoTestsFailsInProd(){
+		givenCodebaseWithErrorsAndNoTests();
+		whenRunThroughPipeline();
+		thenNoErrorsDetected();
+		thenFailsInProd();
+	}
+	
+	@Test
+	public void codebaseWithErrorsAndTestsGetsBlockedByPipeline(){
+		codebase = new Codebase();
+		codebase.addCommit(new ErrorCommit());
+		codebase.addCommit(new TestCommit());
+	}
+
+	private void thenFailsInProd() {
+		assertTrue(codebase.hasErrors() && !pipeline.hasDetectedErrors());
+	}
+
+	private Codebase givenCodebaseWithErrorsAndNoTests() {
+		codebase = new Codebase();
+		codebase.addCommit(new ErrorCommit());
+		return codebase;
 	}
 
 	private void thenNoErrorsDetected() {
 		assertFalse(pipeline.hasDetectedErrors());
 	}
 
-	private void whenRunThroughPipeline(Codebase codebase) {
+	private void whenRunThroughPipeline() {
 		pipeline.validate(codebase);
 	}
 
