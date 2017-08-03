@@ -6,6 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cd.commits.ErrorCommit;
+import cd.commits.FunctionalityCommit;
+import cd.commits.TestCommit;
+
 public class FunctionalityTest {
 
 	Functionality functionality;
@@ -19,15 +23,36 @@ public class FunctionalityTest {
 	}
 
 	@Test
+	public void newFunctionalityFromFunctionalityCommitDoesntHaveOrDetectError(){
+		givenNewFunctionalityCommit();
+		thenErrorNotDetected();
+		thenHasNoError();
+	}
+	
+	@Test
+	public void newFunctionalityFromErrorCommitHasErrorThatIsntDetected(){
+		givenNewErrorCommit();
+		thenErrorNotDetected();
+		thenHasError();
+	}
+
+	@Test
+	public void newFunctionalityFromTestCommitHasNoError(){
+		givenNewTestCommit();
+		thenHasNoError();
+		thenErrorNotDetected();
+	}
+	
+	@Test
 	public void errorCommitAddsError(){
-		givenNewFunctionality();
+		givenNewFunctionalityCommit();
 		givenError();
-		thenHasErrors();
+		thenHasError();
 	}
 
 	@Test
 	public void testDetectsErrors(){
-		givenNewFunctionality();
+		givenNewFunctionalityCommit();
 		givenError();
 		givenTest();
 		thenTestDetectsError();
@@ -35,23 +60,51 @@ public class FunctionalityTest {
 	
 	@Test
 	public void errorWithoutTestIsntDetected(){
-		givenNewFunctionality();
+		givenNewFunctionalityCommit();
 		givenError();
 		thenErrorNotDetected();
 	}
 	
 	@Test
-	public void newFunctionalityDoesntHaveOrDetectErrors(){
-		givenNewFunctionality();
+	public void testWithoutErrorDoesntDetectError(){
+		givenNewFunctionalityCommit();
+		givenTest();
 		thenErrorNotDetected();
-		thenNoError();
+	}
+	
+	@Test
+	public void testAddedBeforeErrorStillDetectsError(){
+		givenNewFunctionalityCommit();
+		givenTest();
+		givenError();
+		thenTestDetectsError();
+	}
+	
+	@Test
+	public void fixRemovesError(){
+		givenNewFunctionalityCommit();
+		givenError();
+		givenFix();
+		thenHasNoError();
+	}
+	
+	@Test
+	public void fixedErrorIsNotDetected(){
+		givenNewFunctionalityCommit();
+		givenError();
+		givenFix();
+		thenErrorNotDetected();
+	}
+	
+	private void givenFix() {
+		functionality.addFix();
 	}
 
-	private void thenNoError() {
+	private void thenHasNoError() {
 		assertFalse(functionality.hasError());
 	}
 
-	private void thenHasErrors() {
+	private void thenHasError() {
 		assertTrue(functionality.hasError());
 	}
 
@@ -59,8 +112,16 @@ public class FunctionalityTest {
 		functionality.addError();
 	}
 
-	private void givenNewFunctionality() {
-		this.functionality = new Functionality();
+	private void givenNewFunctionalityCommit() {
+		functionality = new Functionality(new FunctionalityCommit(1));
+	}
+
+	private void givenNewErrorCommit() {
+		functionality = new Functionality(new ErrorCommit(1));
+	}
+
+	private void givenNewTestCommit() {
+		functionality = new Functionality(new TestCommit(1));
 	}
 
 	private void thenTestDetectsError() {
