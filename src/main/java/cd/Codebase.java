@@ -1,9 +1,12 @@
 package cd;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import cd.commits.Commit;
+import cd.commits.FatalErrorCommit;
 
 public class Codebase {
 
@@ -57,6 +60,9 @@ public class Codebase {
 	public int getValue() {
 		int value = 0;
 		for(Functionality functionality : functionalities){
+			if(functionality.hasFatalError()){
+				return 0;
+			}
 			value += functionality.getValue();
 		}
 		return value;

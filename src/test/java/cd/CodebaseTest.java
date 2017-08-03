@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import cd.commits.ErrorCommit;
+import cd.commits.FatalErrorCommit;
+import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
 
@@ -68,7 +70,7 @@ public class CodebaseTest {
 	}
 	
 	@Test
-	public void valueOfACodebaseWithoutErrorsIsTheSumOfTheValuesOfAllItsFunctionalities(){
+	public void valueOfACodebaseIsTheSumOfTheValuesOfAllItsFunctionalities(){
 		givenNewCodebase();
 		givenFunctionalityCommit(1, 1000);
 		givenFunctionalityCommit(1, 500);
@@ -77,6 +79,36 @@ public class CodebaseTest {
 		thenValue(1500);
 	}
 	
+	@Test
+	public void valueOfACodebaseIsZeroWhenFatalError(){
+		givenNewCodebase();
+		givenFunctionalityCommit(1, 1000);
+		givenFunctionalityCommit(2, 1000);
+		givenFatalErrorCommit(2);
+		thenValue(0);	
+	}
+	
+	@Test
+	public void codebaseHasValueWhenAllFatalErrorsAreFixed(){
+		givenNewCodebase();
+		givenFunctionalityCommit(1, 1000);
+		givenFunctionalityCommit(2, 1000);
+		givenFatalErrorCommit(1);
+		givenFatalErrorCommit(2);
+		givenFixCommit(1);
+		thenValue(0);	
+		givenFixCommit(2);
+		thenValue(2000);
+	}
+	
+	private void givenFixCommit(int functionalityId) {
+		codebase.addCommit(new FixCommit(functionalityId));
+	}
+
+	private void givenFatalErrorCommit(int functionalityId) {
+		codebase.addCommit(new FatalErrorCommit(functionalityId));
+	}
+
 	private void thenValue(int value) {
 		assertEquals(value, codebase.getValue());
 	}

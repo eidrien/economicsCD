@@ -2,6 +2,7 @@ package cd;
 
 import cd.commits.Commit;
 import cd.commits.ErrorCommit;
+import cd.commits.FatalErrorCommit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
@@ -10,15 +11,19 @@ public class Functionality {
 
 	int id;
 	int value;
-	boolean error;
+	boolean error, fatalError;
 	boolean test;
 	
 	public Functionality(Commit commit){
 		id = commit.getFunctionalityId();
+		value = 0;
+		error = fatalError = test = false;
 		addModification(commit);
 	}
 	
 	public void addModification(Commit commit) {
+		if(commit.getClass().equals(FatalErrorCommit.class))
+			addFatalError();
 		if(commit.getClass().equals(ErrorCommit.class))
 			addError();
 		if(commit.getClass().equals(TestCommit.class))
@@ -37,6 +42,11 @@ public class Functionality {
 		error = true;
 	}
 
+	public void addFatalError() {
+		fatalError = true;
+		addError();
+	}
+
 	public boolean hasError() {
 		return error;
 	}
@@ -51,6 +61,7 @@ public class Functionality {
 
 	public void addFix() {
 		error = false;
+		fatalError = false;
 	}
 
 	public int getId() {
@@ -63,6 +74,10 @@ public class Functionality {
 		}else{
 			return value;
 		}
+	}
+
+	public boolean hasFatalError() {
+		return fatalError;
 	}
 
 }

@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cd.commits.ErrorCommit;
+import cd.commits.FatalErrorCommit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
@@ -111,6 +112,33 @@ public class FunctionalityTest {
 		thenFunctionalityValueIs(0);
 	}
 	
+	@Test
+	public void fixedFunctionalityDoesNotHaveFatalError(){
+		givenNewFunctionalityCommit();
+		givenFatalError();
+		givenFix();
+		thenNoFatalError();
+	}
+	
+	@Test
+	public void addingFatalErrorCommitGivesFatalErrorToFunctionality(){
+		givenNewFunctionalityCommit();
+		givenFatalError();
+		thenFatalError();
+	}
+	
+	private void thenFatalError() {
+		assertTrue(functionality.hasFatalError());
+	}
+
+	private void thenNoFatalError() {
+		assertFalse(functionality.hasFatalError());
+	}
+
+	private void givenFatalError() {
+		functionality.addModification(new FatalErrorCommit(1));
+	}
+
 	private void thenFunctionalityValueIs(int value) {
 		assertEquals(value, functionality.getValue());
 	}
