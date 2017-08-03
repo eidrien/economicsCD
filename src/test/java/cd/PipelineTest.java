@@ -3,13 +3,9 @@ package cd;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import cd.commits.ErrorCommit;
-import cd.commits.TestCommit;
 
 public class PipelineTest {
 
@@ -84,38 +80,48 @@ public class PipelineTest {
 		thenCodebaseIsIn(c3, Stages.WAITING_FOR_TEST);
 	}
 
-//	@Test
-//	public void codebaseDetectingErrorsGetsBlockedByPipeline(){
-//		Codebase c = givenCodebaseDetectingErrors();
-//		whenRunThroughPipeline(c);
-//		thenProdIsNotReached();
-//	}
-//	
-//	@Test
-//	public void codebaseDoesNotRunThroughPipelineWhenItsFull(){
-//		Codebase c1 = givenCodebaseWithTests(100);
-//		Codebase c2 = givenCodebaseWithTets(100);
-//		whenRunThroughPipeline(c1);
-//		whenRunThroughPipeline(c2);
-//	}
+	@Test
+	public void emptyPipelineDoesntGenerateValue(){
+		thenAccumulatedValueIs(0);
+	}
 	
-	//EmptyPipelineDoesntGenerateValue
-	//PipelineWithCodebaseInProdIncreasesValueByCodebaseValue
+	@Test
+	public void pipelineWithNothingInProdDoesntGenerateValue(){
+		Codebase c1 = givenCodebaseWithValidationTime(10);
+		Codebase c2 = givenCodebaseWithValidationTime(10);
+		whenRunThroughPipeline(c1);
+		whenRunThroughPipeline(c2);
+		thenAccumulatedValueIs(0);
+	}
 	
+	@Test
+	public void pipelineWithCodebaseInProdIncrementsValueByCodebaseValueInEachStep(){
+		Codebase c = givenCodebaseWithValidationTimeAndValue(1, 11);
+		whenRunThroughPipeline(c);
+		givenTimeStepsElapsed(1);
+		thenAccumulatedValueIs(0);
+		givenTimeStepsElapsed(10);
+		thenAccumulatedValueIs(110);
+	}
+	
+	private Codebase givenCodebaseWithValidationTimeAndValue(int validationTime, int value) {
+		Codebase c = Mockito.mock(Codebase.class);
+		when(c.detectsErrors()).thenReturn(false);
+		when(c.getValidationTime()).thenReturn(validationTime);
+		when(c.getValue()).thenReturn(value);
+		return c;
+	}
+
+	private void thenAccumulatedValueIs(int value) {
+		assertEquals(value, pipeline.getAccumulatedValue());
+	}
+
 	private void thenCodebaseIsIn(Codebase c, Stages stage) {
 		assertEquals(stage, pipeline.stageOf(c));
 	}
 
-	private void thenCodebaseIsInProd(Codebase c) {
-		assertEquals(Stages.PROD, pipeline.stageOf(c));
-	}
-
 	private void givenTimeStepsElapsed(int i) {
 		pipeline.timeStepsElapsed(i);
-	}
-
-	private void thenCodebaseIsInTest(Codebase c) {
-		assertEquals(Stages.TEST, pipeline.stageOf(c));
 	}
 
 	private void whenRunThroughPipeline(Codebase c) {

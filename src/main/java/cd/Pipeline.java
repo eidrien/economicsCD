@@ -6,6 +6,9 @@ public class Pipeline {
 	
 	int currentTime = 0;
 	int testStartTime = 0;
+	int prodDeployTime = 0;
+	
+	int accumulatedValue = 0;
 
 	public void push(Codebase codebase) {
 		waitingForTest = codebase;
@@ -39,6 +42,13 @@ public class Pipeline {
 
 	public void timeStepsElapsed(int i) {
 		currentTime += i;
+		doPromotionsIfPossible();
+		if(inProd != null){
+			accumulatedValue += inProd.getValue() * (currentTime - prodDeployTime);
+		}
+	}
+
+	private void doPromotionsIfPossible() {
 		if(canPromoteToProd()){			
 			promoteToProd();
 		}
@@ -48,7 +58,7 @@ public class Pipeline {
 	}
 
 	private boolean canPromoteToProd() {
-		return validationTimeIsOver() && !inTest.detectsErrors();
+		return inTest!=null && validationTimeIsOver() && !inTest.detectsErrors();
 	}
 
 	private boolean validationTimeIsOver() {
@@ -58,6 +68,11 @@ public class Pipeline {
 	private void promoteToProd() {
 		inProd = inTest;
 		inTest = null;
+		prodDeployTime = testStartTime + inProd.getValidationTime();
+	}
+
+	public int getAccumulatedValue() {
+		return accumulatedValue;
 	}
 
 }
