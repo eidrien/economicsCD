@@ -127,6 +127,18 @@ public class FunctionalityTest {
 		thenFatalError();
 	}
 	
+	@Test
+	public void validationTimeIsTheSumOfAllTestTimes(){
+		givenNewTestCommit();
+		givenTest();
+		givenTest();
+		thenValidationTimeIs(30);
+	}
+	
+	private void thenValidationTimeIs(int validationTime) {
+		assertEquals(validationTime, functionality.getValidationTime());
+	}
+
 	private void thenFatalError() {
 		assertTrue(functionality.hasFatalError());
 	}
@@ -172,7 +184,7 @@ public class FunctionalityTest {
 	}
 
 	private void givenNewTestCommit() {
-		functionality = new Functionality(new TestCommit(1));
+		functionality = new Functionality(new TestCommit(1, 10));
 	}
 
 	private void thenTestDetectsError() {
@@ -180,7 +192,7 @@ public class FunctionalityTest {
 	}
 
 	private void givenTest() {
-		functionality.addTest();
+		functionality.addModification(new TestCommit(1, 10));
 	}
 
 	private void thenErrorNotDetected() {

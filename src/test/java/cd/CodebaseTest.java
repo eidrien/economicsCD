@@ -101,6 +101,19 @@ public class CodebaseTest {
 		thenValue(2000);
 	}
 	
+	@Test
+	public void testExecutionTimeIsTheSumOfAllTestsExecutionTimes(){
+		givenNewCodebase();
+		givenTestCommitWithId(1);
+		givenTestCommitWithId(2);
+		givenTestCommitWithId(3);
+		thenTestExecutionTimeIs(30);
+	}
+	
+	private void thenTestExecutionTimeIs(int testExecutionTime) {
+		assertEquals(testExecutionTime, codebase.getValidationTime());
+	}
+
 	private void givenFixCommit(int functionalityId) {
 		codebase.addCommit(new FixCommit(functionalityId));
 	}
@@ -122,7 +135,7 @@ public class CodebaseTest {
 	}
 
 	private void givenTestCommitWithId(int functionalityId) {
-		codebase.addCommit(new TestCommit(functionalityId));
+		codebase.addCommit(new TestCommit(functionalityId, 10));
 	}
 
 	private void thenHasErrors() {

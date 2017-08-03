@@ -2,9 +2,15 @@ package cd.commits;
 
 public class TestCommit extends Commit {
 
-	public TestCommit(int functionalityId) {
+	int executionTime;
+	
+	public TestCommit(int functionalityId, int executionTime) {
 		super(functionalityId);
-		// TODO Auto-generated constructor stub
+		this.executionTime = executionTime;
+	}
+
+	public int getExecutionTime() {
+		return executionTime;
 	}
 
 }

@@ -11,12 +11,13 @@ public class Functionality {
 
 	int id;
 	int value;
+	int validationTime;
 	boolean error, fatalError;
 	boolean test;
 	
 	public Functionality(Commit commit){
 		id = commit.getFunctionalityId();
-		value = 0;
+		value = validationTime = 0;
 		error = fatalError = test = false;
 		addModification(commit);
 	}
@@ -26,8 +27,9 @@ public class Functionality {
 			addFatalError();
 		if(commit.getClass().equals(ErrorCommit.class))
 			addError();
-		if(commit.getClass().equals(TestCommit.class))
-			addTest();
+		if(commit.getClass().equals(TestCommit.class)){
+			addTest((TestCommit)commit);			
+		}
 		if(commit.getClass().equals(FixCommit.class))
 			addFix();
 		if(commit.getClass().equals(FunctionalityCommit.class))
@@ -38,11 +40,11 @@ public class Functionality {
 		value += value2;
 	}
 
-	public void addError() {
+	private void addError() {
 		error = true;
 	}
 
-	public void addFatalError() {
+	private void addFatalError() {
 		fatalError = true;
 		addError();
 	}
@@ -51,15 +53,16 @@ public class Functionality {
 		return error;
 	}
 
-	public void addTest() {
+	private void addTest(TestCommit commit) {
 		test = true;
+		validationTime += commit.getExecutionTime();
 	}
 
 	public boolean isErrorDetected() {
 		return error && test;
 	}
 
-	public void addFix() {
+	private void addFix() {
 		error = false;
 		fatalError = false;
 	}
@@ -78,6 +81,10 @@ public class Functionality {
 
 	public boolean hasFatalError() {
 		return fatalError;
+	}
+
+	public int getValidationTime() {
+		return validationTime;
 	}
 
 }

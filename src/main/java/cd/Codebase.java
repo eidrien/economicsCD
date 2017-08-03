@@ -1,12 +1,9 @@
 package cd;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import cd.commits.Commit;
-import cd.commits.FatalErrorCommit;
 
 public class Codebase {
 
@@ -66,6 +63,14 @@ public class Codebase {
 			value += functionality.getValue();
 		}
 		return value;
+	}
+
+	public int getValidationTime() {
+		int time = 0;
+		for(Functionality functionality : functionalities){
+			time += functionality.getValidationTime();
+		}
+		return time;
 	}
 
 }
