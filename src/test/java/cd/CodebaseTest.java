@@ -21,15 +21,15 @@ public class CodebaseTest {
 	@Test
 	public void firstCommitOnFunctionalityAddsFunctionality(){
 		givenNewCodebase();
-		givenFunctionalityCommitWithId(1);
+		givenFunctionalityCommit(1);
 		thenNumberOfFunctionalities(1);
 	}
 	
 	@Test
 	public void differentCommitsWithDifferentIdsAddManyFunctionalities(){
 		givenNewCodebase();
-		givenFunctionalityCommitWithId(1);
-		givenFunctionalityCommitWithId(2);
+		givenFunctionalityCommit(1);
+		givenFunctionalityCommit(2);
 		givenErrorCommitWithId(3);
 		givenTestCommitWithId(4);
 		thenNumberOfFunctionalities(4);
@@ -38,8 +38,8 @@ public class CodebaseTest {
 	@Test
 	public void secondCommitOnSameFunctionalityDoesntAddFunctionality(){
 		givenNewCodebase();
-		givenFunctionalityCommitWithId(1);
-		givenFunctionalityCommitWithId(1);
+		givenFunctionalityCommit(1);
+		givenFunctionalityCommit(1);
 		thenNumberOfFunctionalities(1);
 	}
 	
@@ -67,6 +67,20 @@ public class CodebaseTest {
 		thenHasErrors();
 	}
 	
+	@Test
+	public void valueOfACodebaseWithoutErrorsIsTheSumOfTheValuesOfAllItsFunctionalities(){
+		givenNewCodebase();
+		givenFunctionalityCommit(1, 1000);
+		givenFunctionalityCommit(1, 500);
+		givenFunctionalityCommit(2, 1000);
+		givenErrorCommitWithId(2);
+		thenValue(1500);
+	}
+	
+	private void thenValue(int value) {
+		assertEquals(value, codebase.getValue());
+	}
+
 	private void thenErrorNotDetected() {
 		assertFalse(codebase.detectsErrors());
 	}
@@ -91,8 +105,12 @@ public class CodebaseTest {
 		assertEquals(totalFunctionalities, codebase.getNumberOfFunctionalities());
 	}
 
-	private void givenFunctionalityCommitWithId(int functionalityId) {
-		codebase.addCommit(new FunctionalityCommit(functionalityId));
+	private void givenFunctionalityCommit(int functionalityId) {
+		codebase.addCommit(new FunctionalityCommit(functionalityId, 1000));
+	}
+
+	private void givenFunctionalityCommit(int functionalityId, int value) {
+		codebase.addCommit(new FunctionalityCommit(functionalityId, value));
 	}
 
 	private void thenHasNoErrors() {

@@ -54,4 +54,12 @@ public class Codebase {
 		return false;
 	}
 
+	public int getValue() {
+		int value = 0;
+		for(Functionality functionality : functionalities){
+			value += functionality.getValue();
+		}
+		return value;
+	}
+
 }

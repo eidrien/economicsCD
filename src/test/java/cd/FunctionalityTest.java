@@ -97,6 +97,24 @@ public class FunctionalityTest {
 		thenErrorNotDetected();
 	}
 	
+	@Test
+	public void valueFromAllFunctionalityCommitsIsAccummulated(){
+		givenNewFunctionalityCommit();
+		givenFunctionalityCommit();
+		thenFunctionalityValueIs(2000);
+	}
+	
+	@Test
+	public void valueIsZeroWhenFunctionalityHasError(){
+		givenNewFunctionalityCommit();
+		givenError();
+		thenFunctionalityValueIs(0);
+	}
+	
+	private void thenFunctionalityValueIs(int value) {
+		assertEquals(value, functionality.getValue());
+	}
+
 	private void givenFix() {
 		functionality.addModification(new FixCommit(1));
 	}
@@ -114,7 +132,11 @@ public class FunctionalityTest {
 	}
 
 	private void givenNewFunctionalityCommit() {
-		functionality = new Functionality(new FunctionalityCommit(1));
+		functionality = new Functionality(new FunctionalityCommit(1, 1000));
+	}
+	
+	private void givenFunctionalityCommit() {
+		functionality.addModification(new FunctionalityCommit(1, 1000));
 	}
 
 	private void givenNewErrorCommit() {
