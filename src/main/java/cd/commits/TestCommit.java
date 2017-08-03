@@ -1,4 +1,4 @@
-package cd;
+package cd.commits;
 
 public class TestCommit extends Commit {
 

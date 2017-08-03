@@ -6,6 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cd.commits.ErrorCommit;
+import cd.commits.TestCommit;
+
 public class PipelineTest {
 
 	Pipeline pipeline;

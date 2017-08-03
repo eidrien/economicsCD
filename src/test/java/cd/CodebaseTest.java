@@ -6,18 +6,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cd.commits.ErrorCommit;
+import cd.commits.FunctionalityCommit;
+import cd.commits.TestCommit;
+
 public class CodebaseTest {
 
 	Codebase codebase;
 	
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	public void emptyCodebaseHasNoErrors() {
 		givenNewCodebase();
@@ -25,9 +21,17 @@ public class CodebaseTest {
 	}
 	
 	@Test
-	public void functionalCommitAddsFunctionality(){
+	public void firstFunctionalCommitAddsFunctionality(){
 		givenNewCodebase();
-		whenAddingNewFunctionalCommit();
+		givenFunctionalityCommitWithId(1);
+		thenNumberOfFunctionalities(1);
+	}
+	
+	@Test
+	public void secondFunctionalityCommitDoesntAddFunctionality(){
+		givenNewCodebase();
+		givenFunctionalityCommitWithId(1);
+		givenFunctionalityCommitWithId(1);
 		thenNumberOfFunctionalities(1);
 	}
 	
@@ -65,8 +69,8 @@ public class CodebaseTest {
 		assertEquals(totalFunctionalities, codebase.getNumberOfFunctionalities());
 	}
 
-	private void whenAddingNewFunctionalCommit() {
-		codebase.addCommit(new FunctionalityCommit(1));
+	private void givenFunctionalityCommitWithId(int functionalityId) {
+		codebase.addCommit(new FunctionalityCommit(functionalityId));
 	}
 
 	private void thenHasNoErrors() {

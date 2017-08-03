@@ -1,13 +1,19 @@
 package cd;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import cd.commits.ErrorCommit;
+import cd.commits.FunctionalityCommit;
+import cd.commits.TestCommit;
+
 public class Codebase {
 
-	int numberOfFunctionalities;
-	boolean hasFunctionality, hasErrors, hasTests;
+	Set<FunctionalityCommit> functionalities;
+	boolean hasErrors, hasTests;
 	
 	public Codebase(){
-		numberOfFunctionalities = 0;
-		hasFunctionality = false;
+		functionalities = new HashSet<FunctionalityCommit>();
 		hasErrors = false;
 		hasTests = false;
 	}
@@ -20,17 +26,12 @@ public class Codebase {
 		return hasTests;
 	}
 
-	public boolean hasFunctionality(){
-		return hasFunctionality;
-	}
-
 	public void addCommit(FunctionalityCommit commit) {
-		numberOfFunctionalities++;
-		hasFunctionality = true;
+		functionalities.add(commit);
 	}
 
 	public int getNumberOfFunctionalities() {
-		return numberOfFunctionalities;
+		return functionalities.size();
 	}
 
 	public void addCommit(ErrorCommit errorCommit) {
