@@ -8,7 +8,7 @@ public class Commit {
 		this.functionalityId = functionalityId;
 	}
 	
-	int getFunctionalityId(){
+	public int getFunctionalityId(){
 		return functionalityId;
 	}
 	

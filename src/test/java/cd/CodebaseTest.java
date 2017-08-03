@@ -21,14 +21,14 @@ public class CodebaseTest {
 	}
 	
 	@Test
-	public void firstFunctionalCommitAddsFunctionality(){
+	public void firstCommitOnFunctionalityAddsFunctionality(){
 		givenNewCodebase();
 		givenFunctionalityCommitWithId(1);
 		thenNumberOfFunctionalities(1);
 	}
 	
 	@Test
-	public void secondFunctionalityCommitDoesntAddFunctionality(){
+	public void secondCommitOnSameFunctionalityDoesntAddFunctionality(){
 		givenNewCodebase();
 		givenFunctionalityCommitWithId(1);
 		givenFunctionalityCommitWithId(1);
@@ -36,23 +36,22 @@ public class CodebaseTest {
 	}
 	
 	@Test
-	public void errorCommitAddsError(){
+	public void hasErrorsIfAnyOfTheFunctionalitiesHasErrors(){
 		givenNewCodebase();
-		givenFunctionalityCommitWithId(1);
 		givenErrorCommitWithId(1);
 		thenHasErrors();
 	}
-
+	
 	@Test
-	public void testCommitAddsTest(){
+	public void detectsErrorsIfAnyOfTheFunctionalitiesDetectsError(){
 		givenNewCodebase();
-		givenFunctionalityCommitWithId(1);
+		givenErrorCommitWithId(1);
 		givenTestCommitWithId(1);
-		thenHasTests();
+		thenDetectsErrors();
 	}
 	
-	private void thenHasTests() {
-		assertTrue(codebase.hasTests());
+	private void thenDetectsErrors() {
+		assertTrue(codebase.detectsErrors());
 	}
 
 	private void givenTestCommitWithId(int functionalityId) {

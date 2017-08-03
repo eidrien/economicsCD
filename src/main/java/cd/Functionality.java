@@ -1,29 +1,21 @@
 package cd;
 
+import cd.commits.Commit;
 import cd.commits.ErrorCommit;
-import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
 
 public class Functionality {
 
+	int id;
 	boolean error;
 	boolean test;
 	
-	public Functionality(FunctionalityCommit functionalityCommit){
-		error = false;
-		test = false;
+	public Functionality(Commit commit){
+		id = commit.getFunctionalityId();
+		error = commit.getClass().equals(ErrorCommit.class);
+		test = commit.getClass().equals(TestCommit.class);
 	}
 	
-	public Functionality(ErrorCommit errorCommit) {
-		error = true;
-		test = false;
-	}
-
-	public Functionality(TestCommit testCommit) {
-		error = false;
-		test = true;
-	}
-
 	public void addError() {
 		error = true;
 	}
@@ -42,6 +34,10 @@ public class Functionality {
 
 	public void addFix() {
 		error = false;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }
