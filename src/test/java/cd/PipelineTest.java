@@ -73,6 +73,17 @@ public class PipelineTest {
 		thenCodebaseIsIn(c2, Stages.TEST);
 	}
 
+	@Test
+	public void newCodebasePushedIntoPipelineBumpsOutPreviousCodebaseWaitingForTest(){
+		Codebase c1 = givenCodebaseWithValidationTime(10);
+		Codebase c2 = givenCodebaseWithValidationTime(10);
+		Codebase c3 = givenCodebaseWithValidationTime(10);
+		whenRunThroughPipeline(c1);
+		whenRunThroughPipeline(c2);
+		whenRunThroughPipeline(c3);
+		thenCodebaseIsIn(c3, Stages.WAITING_FOR_TEST);
+	}
+
 //	@Test
 //	public void codebaseDetectingErrorsGetsBlockedByPipeline(){
 //		Codebase c = givenCodebaseDetectingErrors();

@@ -2,9 +2,7 @@ package cd;
 
 public class Pipeline {
 	
-	Codebase waitingForTest;
-	Codebase inTest;
-	Codebase inProd;
+	Codebase waitingForTest, inTest, inProd;
 	
 	int currentTime = 0;
 	int testStartTime = 0;
@@ -47,8 +45,6 @@ public class Pipeline {
 		if(canPromoteToTest()){
 			promoteToTest();
 		}
-		
-		waitingForTest = null;
 	}
 
 	private boolean canPromoteToProd() {
