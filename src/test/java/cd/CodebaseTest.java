@@ -38,14 +38,16 @@ public class CodebaseTest {
 	@Test
 	public void errorCommitAddsError(){
 		givenNewCodebase();
-		whenErrorCommitIsAdded();
+		givenFunctionalityCommitWithId(1);
+		givenErrorCommitWithId(1);
 		thenHasErrors();
 	}
 
 	@Test
 	public void testCommitAddsTest(){
 		givenNewCodebase();
-		whenTestCommitIsAdded();
+		givenFunctionalityCommitWithId(1);
+		givenTestCommitWithId(1);
 		thenHasTests();
 	}
 	
@@ -53,16 +55,16 @@ public class CodebaseTest {
 		assertTrue(codebase.hasTests());
 	}
 
-	private void whenTestCommitIsAdded() {
-		codebase.addCommit(new TestCommit(1));
+	private void givenTestCommitWithId(int functionalityId) {
+		codebase.addCommit(new TestCommit(functionalityId));
 	}
 
 	private void thenHasErrors() {
 		assertTrue(codebase.hasErrors());
 	}
 
-	private void whenErrorCommitIsAdded() {
-		codebase.addCommit(new ErrorCommit(1));
+	private void givenErrorCommitWithId(int functionalityId) {
+		codebase.addCommit(new ErrorCommit(functionalityId));
 	}
 
 	private void thenNumberOfFunctionalities(int totalFunctionalities) {
