@@ -104,6 +104,19 @@ public class PipelineTest {
 		thenAccumulatedValueIs(110);
 	}
 	
+	@Test
+	public void complexAccumulatedValueWithTwoDifferentCodebasesMakingItToProd(){
+		Codebase c1 = givenCodebaseWithValidationTimeAndValue(5, 10);
+		Codebase c2 = givenCodebaseWithValidationTimeAndValue(10, 20);
+		whenRunThroughPipeline(c1);
+		whenRunThroughPipeline(c2);
+		givenTimeStepsElapsed(7);
+		thenAccumulatedValueIs(20);
+		givenTimeStepsElapsed(10);
+		thenCodebaseIsIn(c2, Stages.PROD);
+		thenAccumulatedValueIs(140);
+	}
+	
 	private Codebase givenCodebaseWithValidationTimeAndValue(int validationTime, int value) {
 		Codebase c = Mockito.mock(Codebase.class);
 		when(c.detectsErrors()).thenReturn(false);
@@ -120,8 +133,10 @@ public class PipelineTest {
 		assertEquals(stage, pipeline.stageOf(c));
 	}
 
-	private void givenTimeStepsElapsed(int i) {
-		pipeline.timeStepsElapsed(i);
+	private void givenTimeStepsElapsed(int timeSteps) {
+		for(int i=0; i<timeSteps; i++){
+			pipeline.timeStepElapsed();
+		}
 	}
 
 	private void whenRunThroughPipeline(Codebase c) {

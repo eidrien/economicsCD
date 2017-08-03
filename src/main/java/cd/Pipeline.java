@@ -40,12 +40,12 @@ public class Pipeline {
 		return null;
 	}
 
-	public void timeStepsElapsed(int i) {
-		currentTime += i;
-		doPromotionsIfPossible();
+	public void timeStepElapsed() {
+		currentTime ++;
 		if(inProd != null){
-			accumulatedValue += inProd.getValue() * (currentTime - prodDeployTime);
+			accumulatedValue += inProd.getValue();
 		}
+		doPromotionsIfPossible();
 	}
 
 	private void doPromotionsIfPossible() {
