@@ -2,8 +2,6 @@ package cd;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import cd.commits.ErrorCommit;
@@ -25,6 +23,16 @@ public class CodebaseTest {
 		givenNewCodebase();
 		givenFunctionalityCommitWithId(1);
 		thenNumberOfFunctionalities(1);
+	}
+	
+	@Test
+	public void differentCommitsWithDifferentIdsAddManyFunctionalities(){
+		givenNewCodebase();
+		givenFunctionalityCommitWithId(1);
+		givenFunctionalityCommitWithId(2);
+		givenErrorCommitWithId(3);
+		givenTestCommitWithId(4);
+		thenNumberOfFunctionalities(4);
 	}
 	
 	@Test
@@ -50,6 +58,19 @@ public class CodebaseTest {
 		thenDetectsErrors();
 	}
 	
+	@Test
+	public void testForDifferentFunctionalityDoesntDetectError(){
+		givenNewCodebase();
+		givenErrorCommitWithId(1);
+		givenTestCommitWithId(2);
+		thenErrorNotDetected();
+		thenHasErrors();
+	}
+	
+	private void thenErrorNotDetected() {
+		assertFalse(codebase.detectsErrors());
+	}
+
 	private void thenDetectsErrors() {
 		assertTrue(codebase.detectsErrors());
 	}

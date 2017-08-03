@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cd.commits.ErrorCommit;
+import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
 
@@ -97,7 +98,7 @@ public class FunctionalityTest {
 	}
 	
 	private void givenFix() {
-		functionality.addFix();
+		functionality.addModification(new FixCommit(1));
 	}
 
 	private void thenHasNoError() {
@@ -109,7 +110,7 @@ public class FunctionalityTest {
 	}
 
 	private void givenError() {
-		functionality.addError();
+		functionality.addModification(new ErrorCommit(1));
 	}
 
 	private void givenNewFunctionalityCommit() {

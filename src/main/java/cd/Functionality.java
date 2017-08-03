@@ -2,6 +2,7 @@ package cd;
 
 import cd.commits.Commit;
 import cd.commits.ErrorCommit;
+import cd.commits.FixCommit;
 import cd.commits.TestCommit;
 
 public class Functionality {
@@ -12,10 +13,18 @@ public class Functionality {
 	
 	public Functionality(Commit commit){
 		id = commit.getFunctionalityId();
-		error = commit.getClass().equals(ErrorCommit.class);
-		test = commit.getClass().equals(TestCommit.class);
+		addModification(commit);
 	}
 	
+	public void addModification(Commit commit) {
+		if(commit.getClass().equals(ErrorCommit.class))
+			addError();
+		if(commit.getClass().equals(TestCommit.class))
+			addTest();
+		if(commit.getClass().equals(FixCommit.class))
+			addFix();
+	}
+
 	public void addError() {
 		error = true;
 	}
