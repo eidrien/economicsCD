@@ -1,5 +1,7 @@
 package cd.programmer;
 
+import java.util.Random;
+
 import cd.commits.Commit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
@@ -13,6 +15,16 @@ public abstract class Programmer {
 	
 	boolean errorHasBeenDetected;
 	int functionalityIdWithError;
+	
+	protected Random randomGenerator;
+	
+	public Programmer(){
+		randomGenerator = new Random();
+	}
+	
+	public void setRandomSeed(int seed){
+		randomGenerator.setSeed(seed);
+	}
 	
 	public abstract Commit code();
 
@@ -37,8 +49,8 @@ public abstract class Programmer {
 	}
 
 	protected Commit codeFunctionality() {
-		int functionalityId = (int)(Math.random() * maxFunctionalityId);
-		int value = (int)(Math.random() * maxFunctionalityValue);
+		int functionalityId = getRandomNumber(maxFunctionalityId);
+		int value = getRandomNumber(maxFunctionalityValue);
 		return new FunctionalityCommit(functionalityId, value);
 	}
 
@@ -49,8 +61,8 @@ public abstract class Programmer {
 	}
 	
 	protected Commit codeTest() {
-		int functionalityId = (int)(Math.random() * maxFunctionalityId);
-		int executionTime = (int)(Math.random() * maxTestExecutionTime);
+		int functionalityId = getRandomNumber(maxFunctionalityId);
+		int executionTime = getRandomNumber(maxTestExecutionTime);
 		return new TestCommit(functionalityId, executionTime);
 	}
 	
@@ -59,5 +71,11 @@ public abstract class Programmer {
 		functionalityIdWithError = functionalityId;
 	}
 
-
+	protected int getRandomNumber(int max){
+		return randomGenerator.nextInt(max);
+	}
+	
+	protected boolean chooseWithProbability(double probability){
+		return randomGenerator.nextDouble() < probability;
+	}
 }

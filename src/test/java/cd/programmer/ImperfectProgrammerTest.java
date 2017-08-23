@@ -17,6 +17,7 @@ public class ImperfectProgrammerTest {
 		double errorPercentage = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomSeed(100);
 		programmer.setErrorRate(errorPercentage);
 		int totalErrors = 0;
 		for(int i=0; i<100; i++){
@@ -25,8 +26,7 @@ public class ImperfectProgrammerTest {
 				totalErrors++;
 			}
 		}
-		assertTrue(totalErrors < ((errorPercentage+0.1)*100));
-		assertTrue(totalErrors > ((errorPercentage-0.1)*100));
+		assertEquals("Errors should be close to 50", 53, totalErrors);
 	}
 
 	@Test
@@ -34,6 +34,7 @@ public class ImperfectProgrammerTest {
 		double fatalErrorPercentage = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomSeed(100);
 		programmer.setErrorRate(1);
 		programmer.setFatalErrorRate(fatalErrorPercentage);
 		int totalFatalErrors = 0;
@@ -43,8 +44,7 @@ public class ImperfectProgrammerTest {
 				totalFatalErrors++;
 			}
 		}
-		assertTrue(totalFatalErrors < ((fatalErrorPercentage+0.1)*100));
-		assertTrue(totalFatalErrors > ((fatalErrorPercentage-0.1)*100));
+		assertEquals("Fatal errors should be close to 50", 52, totalFatalErrors);
 	}
 	
 	@Test
@@ -52,6 +52,7 @@ public class ImperfectProgrammerTest {
 		double testRate = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomSeed(100);
 		programmer.setErrorRate(0);
 		programmer.setTestRate(testRate);
 		int totalTests = 0;
@@ -61,30 +62,29 @@ public class ImperfectProgrammerTest {
 				totalTests++;
 			}
 		}
-		assertTrue(totalTests < ((testRate+0.1)*100));
-		assertTrue(totalTests > ((testRate-0.1)*100));
+		assertEquals("Tests should be close to 50", 52, totalTests);
+
 	}
 	
 	@Test
 	public void fixesBugsEventually(){
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomSeed(100);
 		programmer.setErrorRate(0.0);
 		programmer.setTestRate(0.0);
 		programmer.setFixRate(0.5);
 		
 		int commitsUntilFix = 0;
-		for(int i=0; i<100; i++){
-			Commit commit = null;
-			do {
-				programmer.errorDetected(i);
-				commit = programmer.code();
-				commitsUntilFix++;
-			} while (!commit.getClass().equals(FixCommit.class));
-			FixCommit fix = (FixCommit)commit;
-			assertEquals(i, fix.getFunctionalityId() );
-		}
-		
-		assertTrue(commitsUntilFix > 100);
+		int functionalityId = 1;
+		Commit commit = null;
+		do {
+			programmer.errorDetected(functionalityId);
+			commit = programmer.code();
+			commitsUntilFix++;
+		} while (!commit.getClass().equals(FixCommit.class));
+		FixCommit fix = (FixCommit)commit;
+		assertEquals(functionalityId, fix.getFunctionalityId() );
+		assertEquals("Should take more than one commit to fix", 6, commitsUntilFix);
 	}
 	
 }
