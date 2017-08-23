@@ -9,6 +9,7 @@ public class ImperfectProgrammer extends Programmer {
 	double errorRate;
 	double fatalErrorRate;
 	double testRate;
+	double fixRate;
 	
 	public void setErrorRate(double rate) {
 		errorRate = rate;
@@ -20,6 +21,10 @@ public class ImperfectProgrammer extends Programmer {
 	
 	public void setTestRate(double rate) {
 		this.testRate = rate;
+	}
+
+	public void setFixRate(double fixRate) {
+		this.fixRate = fixRate;
 	}
 
 	/* (non-Javadoc)
@@ -35,6 +40,12 @@ public class ImperfectProgrammer extends Programmer {
 		return codeFixIfNeededOrFunctionality();
 	}
 
+	public void errorDetected(int functionalityId) {
+		if(Math.random() < fixRate){
+			super.errorDetected(functionalityId);
+		}
+	}
+	
 	private Commit codeError() {
 		int functionalityId = (int)(Math.random() * maxFunctionalityId);
 		if(Math.random() < fatalErrorRate){

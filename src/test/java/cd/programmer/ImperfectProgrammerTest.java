@@ -7,6 +7,7 @@ import org.junit.Test;
 import cd.commits.Commit;
 import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
+import cd.commits.FixCommit;
 import cd.commits.TestCommit;
 
 public class ImperfectProgrammerTest {
@@ -65,12 +66,25 @@ public class ImperfectProgrammerTest {
 	}
 	
 	@Test
-	public void worksOnFixingErrorsOnlyPartially(){
-		fail("Not implemented");
+	public void fixesBugsEventually(){
+		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setErrorRate(0.0);
+		programmer.setTestRate(0.0);
+		programmer.setFixRate(0.5);
+		
+		int commitsUntilFix = 0;
+		for(int i=0; i<100; i++){
+			Commit commit = null;
+			do {
+				programmer.errorDetected(i);
+				commit = programmer.code();
+				commitsUntilFix++;
+			} while (!commit.getClass().equals(FixCommit.class));
+			FixCommit fix = (FixCommit)commit;
+			assertEquals(i, fix.getFunctionalityId() );
+		}
+		
+		assertTrue(commitsUntilFix > 100);
 	}
 	
-	@Test
-	public void manualTesterTakesLongerToExecuteTests(){
-		fail("Not even sure this should be implemented");
-	}
 }
