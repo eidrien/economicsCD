@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cd.commits.Commit;
+import cd.programmer.ImperfectProgrammer;
 import cd.programmer.PerfectProgrammer;
 import cd.programmer.Programmer;
 
@@ -34,7 +35,11 @@ public class Simulation {
 	
 	public static void main(String[] args){
 		Simulation simulation = new Simulation();
-		Programmer programmer = new PerfectProgrammer();
+		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setErrorRate(0.1);
+		programmer.setFatalErrorRate(0.05);
+		programmer.setFixRate(0.75);
+		programmer.setTestRate(0.2);
 		programmer.setRandomSeed(100);
 		simulation.addProgrammer(programmer);
 		for(int i=0; i<100; i++){

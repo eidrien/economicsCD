@@ -48,7 +48,7 @@ public class ImperfectProgrammer extends Programmer {
 	}
 	
 	private Commit codeError() {
-		int functionalityId = (int)(Math.random() * maxFunctionalityId);
+		int functionalityId = getRandomNumber(maxFunctionalityId);
 		if(chooseWithProbability(fatalErrorRate)){
 			return new FatalErrorCommit(functionalityId);
 		}
