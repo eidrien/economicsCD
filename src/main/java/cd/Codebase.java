@@ -8,9 +8,12 @@ import cd.commits.Commit;
 public class Codebase {
 
 	Set<Functionality> functionalities;
+	Set<Integer> detectedErrorIds;
+
 	
 	public Codebase(){
 		functionalities = new HashSet<Functionality>();
+		detectedErrorIds = new HashSet<Integer>();
 	}
 	
 	public boolean hasErrors() {
@@ -46,12 +49,13 @@ public class Codebase {
 	}
 
 	public boolean detectsErrors() {
+		detectedErrorIds = new HashSet<Integer>();
 		for(Functionality functionality : functionalities){
 			if(functionality.isErrorDetected()){
-				return true;
+				detectedErrorIds.add(functionality.getId());
 			}
 		}
-		return false;
+		return !detectedErrorIds.isEmpty();
 	}
 
 	public int getValue() {
@@ -71,6 +75,10 @@ public class Codebase {
 			time += functionality.getValidationTime();
 		}
 		return time;
+	}
+
+	public Set<Integer> getDetectedErrorIds() {
+		return detectedErrorIds;
 	}
 
 }

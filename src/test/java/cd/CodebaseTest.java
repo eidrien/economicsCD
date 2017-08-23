@@ -2,6 +2,8 @@ package cd;
 
 import static org.junit.Assert.*;
 
+import java.util.Set;
+
 import org.junit.Test;
 
 import cd.commits.ErrorCommit;
@@ -69,6 +71,25 @@ public class CodebaseTest {
 		thenHasErrors();
 	}
 	
+	@Test
+	public void tellsWhichFunctionalityIdsHaveErrors(){
+		givenNewCodebase();
+		givenErrorCommitWithId(1);
+		givenTestCommitWithId(1);
+		givenErrorCommitWithId(20);
+		givenTestCommitWithId(20);
+		int[] functionalityIdsWithErrors = new int[] {1,20};
+		thenDetectsErrorsWithIds(functionalityIdsWithErrors);
+	}
+	
+	private void thenDetectsErrorsWithIds(int[] functionalityIdsWithErrors) {
+		codebase.detectsErrors();
+		Set<Integer> detectedErrorIds = codebase.getDetectedErrorIds();
+		for(int functionalityIdWithError : functionalityIdsWithErrors){
+			assertTrue(detectedErrorIds.contains(functionalityIdWithError));				
+		}
+	}
+
 	@Test
 	public void valueOfACodebaseIsTheSumOfTheValuesOfAllItsFunctionalities(){
 		givenNewCodebase();
