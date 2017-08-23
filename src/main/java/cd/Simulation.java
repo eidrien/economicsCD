@@ -34,7 +34,9 @@ public class Simulation {
 	
 	public static void main(String[] args){
 		Simulation simulation = new Simulation();
-		simulation.addProgrammer(new PerfectProgrammer());
+		Programmer programmer = new PerfectProgrammer();
+		programmer.setRandomSeed(100);
+		simulation.addProgrammer(programmer);
 		for(int i=0; i<100; i++){
 			simulation.runStep();
 			System.out.println("step:"+i+","+simulation.getStatistics());
