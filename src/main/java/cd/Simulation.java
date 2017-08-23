@@ -40,6 +40,7 @@ public class Simulation {
 		programmer.setFatalErrorRate(0.05);
 		programmer.setFixRate(0.75);
 		programmer.setTestRate(0.2);
+		programmer.setMaxTestExecutionTime(150);
 		programmer.setRandomSeed(100);
 		simulation.addProgrammer(programmer);
 		for(int i=0; i<100; i++){

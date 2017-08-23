@@ -35,6 +35,10 @@ public abstract class Programmer {
 	public void setMaxValue(int max) {
 		maxFunctionalityValue = max;
 	}
+	
+	public void setMaxTestExecutionTime(int max) {
+		maxTestExecutionTime = max;
+	}
 
 	protected Commit codeFixIfNeededOrFunctionality() {
 		if(hasErrorBeenDetected()){

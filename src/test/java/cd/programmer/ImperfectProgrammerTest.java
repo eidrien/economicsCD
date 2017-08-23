@@ -26,7 +26,7 @@ public class ImperfectProgrammerTest {
 				totalErrors++;
 			}
 		}
-		assertEquals("Errors should be close to 50", 53, totalErrors);
+		assertEquals("Errors should be close to 50", 40, totalErrors);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class ImperfectProgrammerTest {
 				totalFatalErrors++;
 			}
 		}
-		assertEquals("Fatal errors should be close to 50", 52, totalFatalErrors);
+		assertEquals("Fatal errors should be close to 50", 53, totalFatalErrors);
 	}
 	
 	@Test
