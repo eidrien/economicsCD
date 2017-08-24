@@ -10,23 +10,24 @@ import cd.commits.Commit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 import cd.commits.TestCommit;
+import utils.RandomGenerator;
 
 public abstract class Programmer {
 
+	RandomGenerator random;
+	
 	int maxFunctionalityId = 100;
 	int maxFunctionalityValue = 100;
 	int maxTestExecutionTime = 100;
 	
 	Set<Functionality> detectedErrors;
 	
-	protected Random randomGenerator;
-	
 	public Programmer(){
-		randomGenerator = new Random();
+		random = new RandomGenerator();
 	}
 	
-	public void setRandomSeed(int seed){
-		randomGenerator.setSeed(seed);
+	public void setRandomGenerator(RandomGenerator random){
+		this.random = random;
 	}
 	
 	public abstract Commit code();
@@ -56,31 +57,21 @@ public abstract class Programmer {
 	}
 
 	protected Commit codeFunctionality() {
-		int functionalityId = getRandomNumber(maxFunctionalityId);
-		int value = getRandomNumber(maxFunctionalityValue);
+		int functionalityId = random.getRandomNumber(maxFunctionalityId);
+		int value = random.getRandomNumber(maxFunctionalityValue);
 		return new FunctionalityCommit(functionalityId, value);
 	}
 
 	protected Commit codeFix() {
-		Functionality functionalityToFix = getRandomItem(detectedErrors);
+		Functionality functionalityToFix = random.getRandomItem(detectedErrors);
 		FixCommit fix = new FixCommit(functionalityToFix.getId());
 		detectedErrors.remove(functionalityToFix);
 		return fix;
 	}
 	
-	private Functionality getRandomItem(Set<Functionality> items) {
-		int position = getRandomNumber(items.size());
-		Iterator<Functionality> iterator = items.iterator();
-		Functionality randomItem = iterator.next();
-		for(int i=0; i<position; i++){
-			randomItem = iterator.next();
-		}
-		return randomItem;
-	}
-
 	protected Commit codeTest() {
-		int functionalityId = getRandomNumber(maxFunctionalityId);
-		int executionTime = getRandomNumber(maxTestExecutionTime) + 1;
+		int functionalityId = random.getRandomNumber(maxFunctionalityId);
+		int executionTime = random.getRandomNumber(maxTestExecutionTime) + 1;
 		return new TestCommit(functionalityId, executionTime);
 	}
 	
@@ -88,11 +79,4 @@ public abstract class Programmer {
 		this.detectedErrors = new HashSet<Functionality>(ids);
 	}
 
-	protected int getRandomNumber(int max){
-		return randomGenerator.nextInt(max);
-	}
-	
-	protected boolean chooseWithProbability(double probability){
-		return randomGenerator.nextDouble() < probability;
-	}
 }

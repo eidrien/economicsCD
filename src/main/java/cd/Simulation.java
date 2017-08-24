@@ -9,6 +9,7 @@ import cd.commits.Commit;
 import cd.programmer.ImperfectProgrammer;
 
 import cd.programmer.Programmer;
+import utils.RandomGenerator;
 
 public class Simulation {
 	
@@ -17,6 +18,8 @@ public class Simulation {
 	List<Programmer> programmers;
 	Codebase codebase;
 	Pipeline pipeline;
+	
+	private static RandomGenerator randomGenerator;
 	
 	public Simulation(){
 		programmers = new ArrayList<Programmer>();
@@ -45,6 +48,8 @@ public class Simulation {
 	
 	public static void main(String[] args){
 		LOGGER.info("Starting the simulation");
+		seedRandomGenerator();
+		
 		Simulation simulation = new Simulation();
 		addImperfectProgrammer(simulation);
 		for(int i=0; i<200; i++){
@@ -54,14 +59,19 @@ public class Simulation {
 		}
 	}
 
+	private static void seedRandomGenerator() {
+		randomGenerator = new RandomGenerator();
+		randomGenerator.setRandomSeed(100);
+	}
+
 	private static void addImperfectProgrammer(Simulation simulation) {
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(0.1);
 		programmer.setFatalErrorRate(0.3);
 		programmer.setFixRate(0.75);
 		programmer.setTestRate(0.2);
 		programmer.setMaxTestExecutionTime(10);
-		programmer.setRandomSeed(100);
 		simulation.addProgrammer(programmer);
 	}
 

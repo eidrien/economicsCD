@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import cd.Functionality;
@@ -12,15 +13,24 @@ import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
 import cd.commits.FixCommit;
 import cd.commits.TestCommit;
+import utils.RandomGenerator;
 
 public class ImperfectProgrammerTest {
+	
+	RandomGenerator randomGenerator;
+	
+	@Before
+	public void setUp(){
+		randomGenerator = new RandomGenerator();
+		randomGenerator.setRandomSeed(100);
+	}
 
 	@Test
 	public void createsAPercentageOfErrors() {
 		double errorPercentage = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
-		programmer.setRandomSeed(100);
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(errorPercentage);
 		int totalErrors = 0;
 		for(int i=0; i<100; i++){
@@ -37,7 +47,7 @@ public class ImperfectProgrammerTest {
 		double fatalErrorPercentage = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
-		programmer.setRandomSeed(100);
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(1);
 		programmer.setFatalErrorRate(fatalErrorPercentage);
 		int totalFatalErrors = 0;
@@ -55,7 +65,7 @@ public class ImperfectProgrammerTest {
 		double testRate = 0.5;
 		
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
-		programmer.setRandomSeed(100);
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(0);
 		programmer.setTestRate(testRate);
 		int totalTests = 0;
@@ -72,7 +82,7 @@ public class ImperfectProgrammerTest {
 	@Test
 	public void fixesBugsEventually(){
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
-		programmer.setRandomSeed(100);
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(0.0);
 		programmer.setTestRate(0.0);
 		programmer.setFixRate(0.5);
@@ -95,7 +105,7 @@ public class ImperfectProgrammerTest {
 	@Test
 	public void testCommitsMustHaveValidationTimeHigherThanZero(){
 		ImperfectProgrammer programmer = new ImperfectProgrammer();
-		programmer.setRandomSeed(100);
+		programmer.setRandomGenerator(randomGenerator);
 		programmer.setErrorRate(0);
 		programmer.setTestRate(1.0);
 		for(int i=0; i<100; i++){

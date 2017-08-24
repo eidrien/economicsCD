@@ -35,24 +35,24 @@ public class ImperfectProgrammer extends Programmer {
 	 * @see cd.programmer.Programmer#code()
 	 */
 	public Commit code() {
-		if(chooseWithProbability(testRate)){
+		if(random.chooseWithProbability(testRate)){
 			return codeTest();
 		}
-		if(chooseWithProbability(errorRate)){
+		if(random.chooseWithProbability(errorRate)){
 			return codeError();
 		}
 		return codeFixIfNeededOrFunctionality();
 	}
 
 	public void errorsDetected(Set<Functionality> errorsDetected) {
-		if(chooseWithProbability(fixRate)){
+		if(random.chooseWithProbability(fixRate)){
 			super.errorsDetected(errorsDetected);
 		}
 	}
 	
 	private Commit codeError() {
-		int functionalityId = getRandomNumber(maxFunctionalityId);
-		if(chooseWithProbability(fatalErrorRate)){
+		int functionalityId = random.getRandomNumber(maxFunctionalityId);
+		if(random.chooseWithProbability(fatalErrorRate)){
 			return new FatalErrorCommit(functionalityId);
 		}
 		return new ErrorCommit(functionalityId);
