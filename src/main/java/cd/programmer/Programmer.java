@@ -80,7 +80,7 @@ public abstract class Programmer {
 
 	protected Commit codeTest() {
 		int functionalityId = getRandomNumber(maxFunctionalityId);
-		int executionTime = getRandomNumber(maxTestExecutionTime);
+		int executionTime = getRandomNumber(maxTestExecutionTime) + 1;
 		return new TestCommit(functionalityId, executionTime);
 	}
 	

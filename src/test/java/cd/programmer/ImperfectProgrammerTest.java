@@ -92,4 +92,15 @@ public class ImperfectProgrammerTest {
 		assertEquals("Should take more than one commit to fix", 6, commitsUntilFix);
 	}
 	
+	@Test
+	public void testCommitsMustHaveValidationTimeHigherThanZero(){
+		ImperfectProgrammer programmer = new ImperfectProgrammer();
+		programmer.setRandomSeed(100);
+		programmer.setErrorRate(0);
+		programmer.setTestRate(1.0);
+		for(int i=0; i<100; i++){
+			TestCommit commit = (TestCommit)programmer.code();
+			assertTrue(commit.getExecutionTime() > 0);
+		}
+	}
 }
