@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
 
 public class PipelineTest {
@@ -132,22 +133,16 @@ public class PipelineTest {
 		thenPipelineReturnsDetectedErrors(detectedErrors);
 	}
 	
-	private void thenPipelineReturnsDetectedErrors(HashSet<Functionality> detectedErrors) {
-		assertEquals(detectedErrors, pipeline.getDetectedErrors());
-	}
-
-	private void givenBuildWithDetectedErrors(Build build, HashSet<Functionality> detectedErrors) {
-		when(build.getDetectedErrors()).thenReturn(detectedErrors);
-	}
-
 	@Test
-	public void returnsErrorsOfPreviouslyBuildIfCurrentTestIsOngoing(){
+	public void returnsErrorsOfLastTestedIfCurrentTestIsOngoing(){
 		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
 		HashSet<Functionality> detectedErrors1 = new HashSet<Functionality>();
+		detectedErrors1.add(new Functionality(new ErrorCommit(1)));
 		givenBuildWithDetectedErrors(b1, detectedErrors1);
 		Build b2 = givenBuildWithValidationTimeAndValue(10, 20);
 		HashSet<Functionality> detectedErrors2 = new HashSet<Functionality>();
-		givenBuildWithDetectedErrors(b1, detectedErrors2);
+		detectedErrors2.add(new Functionality(new ErrorCommit(2)));
+		givenBuildWithDetectedErrors(b2, detectedErrors2);
 		whenRunThroughPipeline(b1);
 		whenRunThroughPipeline(b2);
 		givenTimeStepsElapsed(7);
@@ -155,7 +150,7 @@ public class PipelineTest {
 	}
 	
 	@Test
-	public void fatalErrorInProdShouldBeDetectedRightAway(){
+	public void fatalErrorsInProdAreDetected(){
 		HashSet<Functionality> fatalErrors = new HashSet<Functionality>();
 		fatalErrors.add(new Functionality(new FatalErrorCommit(12)));
 		fatalErrors.add(new Functionality(new FatalErrorCommit(23)));
@@ -165,7 +160,16 @@ public class PipelineTest {
 		thenBuildIsIn(b,Stages.PROD);
 		thenFatalErrorsAreDetected(b, fatalErrors);
 	}
-	
+		
+	private void thenPipelineReturnsDetectedErrors(HashSet<Functionality> expectedErrors) {
+		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
+		assertEquals(expectedErrors, detectedErrors);
+	}
+
+	private void givenBuildWithDetectedErrors(Build build, HashSet<Functionality> detectedErrors) {
+		when(build.getDetectedErrors()).thenReturn(detectedErrors);
+	}
+
 	private void thenFatalErrorsAreDetected(Build build, Set<Functionality> fatalErrors) {
 		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
 		assertEquals(fatalErrors.size(), detectedErrors.size());

@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Pipeline {
 	
-	Build waitingForTest, inTest, inProd;
+	Build waitingForTest, inTest, lastTested, inProd;
 	
 	int currentTime = 0;
 	int testStartTime = 0;
@@ -52,16 +52,27 @@ public class Pipeline {
 	}
 
 	private void doPromotionsIfPossible() {
-		if(canPromoteToProd()){			
-			promoteToProd();
+		if(isTestFinished()){
+			saveLastTestedBuild();
+			if(lastTestedBuildHasNoErrors()){
+				promoteToProd();
+			}
 		}
 		if(canPromoteToTest()){
 			promoteToTest();
 		}
 	}
 
-	private boolean canPromoteToProd() {
-		return inTest!=null && isValidationTimeOver() && !inTest.detectsErrors();
+	private void saveLastTestedBuild() {
+		lastTested = inTest;
+	}
+
+	private boolean isTestFinished() {
+		return inTest!=null && isValidationTimeOver();
+	}
+
+	private boolean lastTestedBuildHasNoErrors() {
+		return lastTested != null && !lastTested.detectsErrors();
 	}
 
 	private boolean isValidationTimeOver() {
@@ -80,8 +91,9 @@ public class Pipeline {
 
 	public Set<Functionality> getDetectedErrors() {
 		HashSet<Functionality> detectedErrors = new HashSet<Functionality>();
-		if(inTest != null){
-			detectedErrors.addAll(inTest.getDetectedErrors());
+		Build lastTested = getLastTestedBuild();
+		if(lastTested != null){
+			detectedErrors.addAll(lastTested.getDetectedErrors());
 		}
 		if(inProd != null){
 			Set<Functionality> errors = inProd.getErrors();
@@ -92,6 +104,10 @@ public class Pipeline {
 			}
 		}
 		return detectedErrors;
+	}
+
+	private Build getLastTestedBuild() {
+		return lastTested;
 	}
 
 	public Build getBuildIn(Stages stage) {
