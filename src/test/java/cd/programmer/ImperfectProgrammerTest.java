@@ -2,6 +2,8 @@ package cd.programmer;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import cd.commits.Commit;
@@ -78,7 +80,9 @@ public class ImperfectProgrammerTest {
 		int functionalityId = 1;
 		Commit commit = null;
 		do {
-			programmer.errorDetected(functionalityId);
+			HashSet<Integer> bugIds = new HashSet<Integer>();
+			bugIds.add(functionalityId);
+			programmer.errorsDetected(bugIds);
 			commit = programmer.code();
 			commitsUntilFix++;
 		} while (!commit.getClass().equals(FixCommit.class));

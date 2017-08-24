@@ -2,6 +2,8 @@ package cd.programmer;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import cd.commits.Commit;
@@ -44,7 +46,9 @@ public class PerfectProgrammerTest {
 	@Test
 	public void fixesErrorsInmediately(){
 		Programmer programmer = new PerfectProgrammer();
-		programmer.errorDetected(1);
+		HashSet<Integer> bugIds = new HashSet<Integer>();
+		bugIds.add(1);
+		programmer.errorsDetected(bugIds);
 		Commit commit = programmer.code();
 		assertEquals(FixCommit.class, commit.getClass());
 		FixCommit fix = (FixCommit)commit;
@@ -54,7 +58,9 @@ public class PerfectProgrammerTest {
 	@Test
 	public void goesBackToAddingValueRightAfterFixingError(){
 		Programmer programmer = new PerfectProgrammer();
-		programmer.errorDetected(1);
+		HashSet<Integer> bugIds = new HashSet<Integer>();
+		bugIds.add(1);
+		programmer.errorsDetected(bugIds);
 		programmer.code();
 		Commit code = programmer.code();
 		assertEquals(FunctionalityCommit.class, code.getClass());

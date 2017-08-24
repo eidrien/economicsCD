@@ -6,4 +6,7 @@ public class FatalErrorCommit extends Commit {
 		super(functionalityId);
 	}
 
+	public String toString(){
+		return "FatalError - id:"+functionalityId;
+	}
 }

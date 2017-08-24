@@ -16,7 +16,7 @@ public class Codebase {
 		detectedErrorIds = new HashSet<Integer>();
 	}
 	
-	public boolean hasErrors() {
+	private boolean hasErrors() {
 		for(Functionality functionality : functionalities){
 			if(functionality.hasError()){
 				return true;
@@ -44,11 +44,11 @@ public class Codebase {
 		return null;
 	}
 
-	public int getNumberOfFunctionalities() {
+	private int getNumberOfFunctionalities() {
 		return functionalities.size();
 	}
 
-	public boolean detectsErrors() {
+	private boolean detectsErrors() {
 		detectedErrorIds = new HashSet<Integer>();
 		for(Functionality functionality : functionalities){
 			if(functionality.isErrorDetected()){
@@ -58,7 +58,7 @@ public class Codebase {
 		return !detectedErrorIds.isEmpty();
 	}
 
-	public int getValue() {
+	private int getValue() {
 		int value = 0;
 		for(Functionality functionality : functionalities){
 			if(functionality.hasFatalError()){
@@ -69,7 +69,7 @@ public class Codebase {
 		return value;
 	}
 
-	public int getValidationTime() {
+	private int getValidationTime() {
 		int time = 0;
 		for(Functionality functionality : functionalities){
 			time += functionality.getValidationTime();
@@ -77,8 +77,14 @@ public class Codebase {
 		return time;
 	}
 
-	public Set<Integer> getDetectedErrorIds() {
+	private Set<Integer> getDetectedErrorIds() {
 		return detectedErrorIds;
+	}
+
+	public Build build() {
+		detectsErrors();
+		return new Build(getValue(), getValidationTime(), getNumberOfFunctionalities(), 
+				hasErrors(), getDetectedErrorIds());
 	}
 
 }

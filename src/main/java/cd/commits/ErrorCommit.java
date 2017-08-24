@@ -7,4 +7,7 @@ public class ErrorCommit extends Commit {
 		// TODO Auto-generated constructor stub
 	}
 
+	public String toString(){
+		return "Error - id:"+functionalityId;
+	}
 }

@@ -6,4 +6,7 @@ public class FixCommit extends Commit {
 		super(functionalityId);
 	}
 
+	public String toString(){
+		return "Fix - id:"+functionalityId;
+	}
 }

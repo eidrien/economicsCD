@@ -3,6 +3,8 @@ package cd;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.HashSet;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -19,65 +21,65 @@ public class PipelineTest {
 	
 	@Test
 	public void newCodebaseEntersTestingInmediatelyInEmptyPipeline(){
-		Codebase c = givenCodebaseWithValidationTime(0);
-		whenRunThroughPipeline(c);
-		thenCodebaseIsIn(c, Stages.TEST);
+		Build b = givenBuildWithValidationTime(0);
+		whenRunThroughPipeline(b);
+		thenBuildIsIn(b, Stages.TEST);
 	}
 
 	@Test
 	public void codebaseNotDetectingErrorsMakesItToProdAfterRunningAllTests() {
-		Codebase c = givenCodebaseWithValidationTime(0);
-		whenRunThroughPipeline(c);
+		Build b = givenBuildWithValidationTime(0);
+		whenRunThroughPipeline(b);
 		givenTimeStepsElapsed(1);
-		thenCodebaseIsIn(c, Stages.PROD);
+		thenBuildIsIn(b, Stages.PROD);
 	}
 	
 	@Test
 	public void newCodebaseWaitsForTestIfItIsAlreadyBusy(){
-		Codebase c1 = givenCodebaseWithValidationTime(10);
-		Codebase c2 = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c1);
-		whenRunThroughPipeline(c2);
-		thenCodebaseIsIn(c1, Stages.TEST);
-		thenCodebaseIsIn(c2, Stages.WAITING_FOR_TEST);
+		Build b1 = givenBuildWithValidationTime(10);
+		Build b2 = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
+		thenBuildIsIn(b1, Stages.TEST);
+		thenBuildIsIn(b2, Stages.WAITING_FOR_TEST);
 	}
 		
 	@Test
 	public void codebasePassingValidationsMovesToProd(){
-		Codebase c = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c);
+		Build b = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b);
 		givenTimeStepsElapsed(10);
-		thenCodebaseIsIn(c, Stages.PROD);
+		thenBuildIsIn(b, Stages.PROD);
 	}
 
 	@Test
 	public void ifNotEnoughTimeHasPassedForValidationToHaveFinishedCodebaseStaysInTest(){
-		Codebase c = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c);
+		Build b = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b);
 		givenTimeStepsElapsed(5);
-		thenCodebaseIsIn(c, Stages.TEST);
+		thenBuildIsIn(b, Stages.TEST);
 	}
 
 	
 	@Test
 	public void codebaseWaitingForTestMovesToTestWhenValidationIsFinished(){
-		Codebase c1 = givenCodebaseWithValidationTime(10);
-		Codebase c2 = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c1);
-		whenRunThroughPipeline(c2);
+		Build b1 = givenBuildWithValidationTime(10);
+		Build b2 = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
 		givenTimeStepsElapsed(10);
-		thenCodebaseIsIn(c2, Stages.TEST);
+		thenBuildIsIn(b2, Stages.TEST);
 	}
 
 	@Test
 	public void newCodebasePushedIntoPipelineBumpsOutPreviousCodebaseWaitingForTest(){
-		Codebase c1 = givenCodebaseWithValidationTime(10);
-		Codebase c2 = givenCodebaseWithValidationTime(10);
-		Codebase c3 = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c1);
-		whenRunThroughPipeline(c2);
-		whenRunThroughPipeline(c3);
-		thenCodebaseIsIn(c3, Stages.WAITING_FOR_TEST);
+		Build b1 = givenBuildWithValidationTime(10);
+		Build b2 = givenBuildWithValidationTime(10);
+		Build b3 = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
+		whenRunThroughPipeline(b3);
+		thenBuildIsIn(b3, Stages.WAITING_FOR_TEST);
 	}
 
 	@Test
@@ -87,17 +89,17 @@ public class PipelineTest {
 	
 	@Test
 	public void pipelineWithNothingInProdDoesntGenerateValue(){
-		Codebase c1 = givenCodebaseWithValidationTime(10);
-		Codebase c2 = givenCodebaseWithValidationTime(10);
-		whenRunThroughPipeline(c1);
-		whenRunThroughPipeline(c2);
+		Build b1 = givenBuildWithValidationTime(10);
+		Build b2 = givenBuildWithValidationTime(10);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
 		thenAccumulatedValueIs(0);
 	}
 	
 	@Test
 	public void pipelineWithCodebaseInProdIncrementsValueByCodebaseValueInEachStep(){
-		Codebase c = givenCodebaseWithValidationTimeAndValue(1, 11);
-		whenRunThroughPipeline(c);
+		Build b = givenBuildWithValidationTimeAndValue(1, 11);
+		whenRunThroughPipeline(b);
 		givenTimeStepsElapsed(1);
 		thenAccumulatedValueIs(0);
 		givenTimeStepsElapsed(10);
@@ -106,31 +108,63 @@ public class PipelineTest {
 	
 	@Test
 	public void complexAccumulatedValueWithTwoDifferentCodebasesMakingItToProd(){
-		Codebase c1 = givenCodebaseWithValidationTimeAndValue(5, 10);
-		Codebase c2 = givenCodebaseWithValidationTimeAndValue(10, 20);
-		whenRunThroughPipeline(c1);
-		whenRunThroughPipeline(c2);
+		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
+		Build b2 = givenBuildWithValidationTimeAndValue(10, 20);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
 		givenTimeStepsElapsed(7);
 		thenAccumulatedValueIs(20);
 		givenTimeStepsElapsed(10);
-		thenCodebaseIsIn(c2, Stages.PROD);
+		thenBuildIsIn(b2, Stages.PROD);
 		thenAccumulatedValueIs(140);
 	}
 	
-	private Codebase givenCodebaseWithValidationTimeAndValue(int validationTime, int value) {
-		Codebase c = Mockito.mock(Codebase.class);
-		when(c.detectsErrors()).thenReturn(false);
-		when(c.getValidationTime()).thenReturn(validationTime);
-		when(c.getValue()).thenReturn(value);
-		return c;
+	@Test
+	public void returnErrorsOfFinishedBuildInTest(){
+		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
+		HashSet<Integer> detectedErrors = new HashSet<Integer>();
+		givenBuildWithDetectedErrors(b1, detectedErrors);
+		whenRunThroughPipeline(b1);
+		givenTimeStepsElapsed(5);
+		thenPipelineReturnsDetectedErrors(detectedErrors);
+	}
+	
+	private void thenPipelineReturnsDetectedErrors(HashSet<Integer> detectedErrors) {
+		assertEquals(detectedErrors, pipeline.getDetectedErrors());
+	}
+
+	private void givenBuildWithDetectedErrors(Build build, HashSet<Integer> detectedErrors) {
+		when(build.getDetectedErrorIds()).thenReturn(detectedErrors);
+	}
+
+	@Test
+	public void returnsErrorsOfPreviouslyBuildIfCurrentTestIsOngoing(){
+		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
+		HashSet<Integer> detectedErrors1 = new HashSet<Integer>();
+		givenBuildWithDetectedErrors(b1, detectedErrors1);
+		Build b2 = givenBuildWithValidationTimeAndValue(10, 20);
+		HashSet<Integer> detectedErrors2 = new HashSet<Integer>();
+		givenBuildWithDetectedErrors(b1, detectedErrors2);
+		whenRunThroughPipeline(b1);
+		whenRunThroughPipeline(b2);
+		givenTimeStepsElapsed(7);
+		thenPipelineReturnsDetectedErrors(detectedErrors1);
+	}
+	
+	private Build givenBuildWithValidationTimeAndValue(int validationTime, int value) {
+		Build b = Mockito.mock(Build.class);
+		when(b.detectsErrors()).thenReturn(false);
+		when(b.getValidationTime()).thenReturn(validationTime);
+		when(b.getValue()).thenReturn(value);
+		return b;
 	}
 
 	private void thenAccumulatedValueIs(int value) {
 		assertEquals(value, pipeline.getAccumulatedValue());
 	}
 
-	private void thenCodebaseIsIn(Codebase c, Stages stage) {
-		assertEquals(stage, pipeline.stageOf(c));
+	private void thenBuildIsIn(Build b, Stages stage) {
+		assertEquals(stage, pipeline.stageOf(b));
 	}
 
 	private void givenTimeStepsElapsed(int timeSteps) {
@@ -139,15 +173,15 @@ public class PipelineTest {
 		}
 	}
 
-	private void whenRunThroughPipeline(Codebase c) {
-		pipeline.push(c);
+	private void whenRunThroughPipeline(Build b) {
+		pipeline.push(b);
 	}
 
-	private Codebase givenCodebaseWithValidationTime(int validationTime) {
-		Codebase c = Mockito.mock(Codebase.class);
-		when(c.detectsErrors()).thenReturn(false);
-		when(c.getValidationTime()).thenReturn(validationTime);
-		return c;
+	private Build givenBuildWithValidationTime(int validationTime) {
+		Build b = Mockito.mock(Build.class);
+		when(b.detectsErrors()).thenReturn(false);
+		when(b.getValidationTime()).thenReturn(validationTime);
+		return b;
 	}
 
 }

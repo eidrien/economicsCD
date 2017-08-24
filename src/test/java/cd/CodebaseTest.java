@@ -15,10 +15,12 @@ import cd.commits.TestCommit;
 public class CodebaseTest {
 
 	Codebase codebase;
+	Build build;
 	
 	@Test
 	public void emptyCodebaseHasNoErrors() {
 		givenNewCodebase();
+		whenBuildIsGenerated();
 		thenHasNoErrors();
 	}
 	
@@ -26,6 +28,7 @@ public class CodebaseTest {
 	public void firstCommitOnFunctionalityAddsFunctionality(){
 		givenNewCodebase();
 		givenFunctionalityCommit(1);
+		whenBuildIsGenerated();
 		thenNumberOfFunctionalities(1);
 	}
 	
@@ -36,6 +39,7 @@ public class CodebaseTest {
 		givenFunctionalityCommit(2);
 		givenErrorCommitWithId(3);
 		givenTestCommitWithId(4);
+		whenBuildIsGenerated();
 		thenNumberOfFunctionalities(4);
 	}
 	
@@ -44,6 +48,7 @@ public class CodebaseTest {
 		givenNewCodebase();
 		givenFunctionalityCommit(1);
 		givenFunctionalityCommit(1);
+		whenBuildIsGenerated();
 		thenNumberOfFunctionalities(1);
 	}
 	
@@ -51,6 +56,7 @@ public class CodebaseTest {
 	public void hasErrorsIfAnyOfTheFunctionalitiesHasErrors(){
 		givenNewCodebase();
 		givenErrorCommitWithId(1);
+		whenBuildIsGenerated();
 		thenHasErrors();
 	}
 	
@@ -59,6 +65,7 @@ public class CodebaseTest {
 		givenNewCodebase();
 		givenErrorCommitWithId(1);
 		givenTestCommitWithId(1);
+		whenBuildIsGenerated();
 		thenDetectsErrors();
 	}
 	
@@ -67,6 +74,7 @@ public class CodebaseTest {
 		givenNewCodebase();
 		givenErrorCommitWithId(1);
 		givenTestCommitWithId(2);
+		whenBuildIsGenerated();
 		thenErrorNotDetected();
 		thenHasErrors();
 	}
@@ -78,13 +86,17 @@ public class CodebaseTest {
 		givenTestCommitWithId(1);
 		givenErrorCommitWithId(20);
 		givenTestCommitWithId(20);
+		whenBuildIsGenerated();
 		int[] functionalityIdsWithErrors = new int[] {1,20};
 		thenDetectsErrorsWithIds(functionalityIdsWithErrors);
 	}
 	
+	private void whenBuildIsGenerated() {
+		build = codebase.build();
+	}
+
 	private void thenDetectsErrorsWithIds(int[] functionalityIdsWithErrors) {
-		codebase.detectsErrors();
-		Set<Integer> detectedErrorIds = codebase.getDetectedErrorIds();
+		Set<Integer> detectedErrorIds = build.getDetectedErrorIds();
 		for(int functionalityIdWithError : functionalityIdsWithErrors){
 			assertTrue(detectedErrorIds.contains(functionalityIdWithError));				
 		}
@@ -97,6 +109,7 @@ public class CodebaseTest {
 		givenFunctionalityCommit(1, 500);
 		givenFunctionalityCommit(2, 1000);
 		givenErrorCommitWithId(2);
+		whenBuildIsGenerated();
 		thenValue(1500);
 	}
 	
@@ -106,6 +119,7 @@ public class CodebaseTest {
 		givenFunctionalityCommit(1, 1000);
 		givenFunctionalityCommit(2, 1000);
 		givenFatalErrorCommit(2);
+		whenBuildIsGenerated();
 		thenValue(0);	
 	}
 	
@@ -117,8 +131,8 @@ public class CodebaseTest {
 		givenFatalErrorCommit(1);
 		givenFatalErrorCommit(2);
 		givenFixCommit(1);
-		thenValue(0);	
 		givenFixCommit(2);
+		whenBuildIsGenerated();
 		thenValue(2000);
 	}
 	
@@ -128,11 +142,12 @@ public class CodebaseTest {
 		givenTestCommitWithId(1);
 		givenTestCommitWithId(2);
 		givenTestCommitWithId(3);
+		whenBuildIsGenerated();
 		thenTestExecutionTimeIs(30);
 	}
 	
 	private void thenTestExecutionTimeIs(int testExecutionTime) {
-		assertEquals(testExecutionTime, codebase.getValidationTime());
+		assertEquals(testExecutionTime, build.getValidationTime());
 	}
 
 	private void givenFixCommit(int functionalityId) {
@@ -144,15 +159,15 @@ public class CodebaseTest {
 	}
 
 	private void thenValue(int value) {
-		assertEquals(value, codebase.getValue());
+		assertEquals(value, build.getValue());
 	}
 
 	private void thenErrorNotDetected() {
-		assertFalse(codebase.detectsErrors());
+		assertFalse(build.detectsErrors());
 	}
 
 	private void thenDetectsErrors() {
-		assertTrue(codebase.detectsErrors());
+		assertTrue(build.detectsErrors());
 	}
 
 	private void givenTestCommitWithId(int functionalityId) {
@@ -160,7 +175,7 @@ public class CodebaseTest {
 	}
 
 	private void thenHasErrors() {
-		assertTrue(codebase.hasErrors());
+		assertTrue(build.hasErrors());
 	}
 
 	private void givenErrorCommitWithId(int functionalityId) {
@@ -168,7 +183,7 @@ public class CodebaseTest {
 	}
 
 	private void thenNumberOfFunctionalities(int totalFunctionalities) {
-		assertEquals(totalFunctionalities, codebase.getNumberOfFunctionalities());
+		assertEquals(totalFunctionalities, build.getNumberOfFunctionalities());
 	}
 
 	private void givenFunctionalityCommit(int functionalityId) {
@@ -180,7 +195,7 @@ public class CodebaseTest {
 	}
 
 	private void thenHasNoErrors() {
-		assertFalse(codebase.hasErrors());
+		assertFalse(build.hasErrors());
 	}
 
 	private void givenNewCodebase() {

@@ -1,8 +1,11 @@
 package cd;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Pipeline {
 	
-	Codebase waitingForTest, inTest, inProd;
+	Build waitingForTest, inTest, inProd;
 	
 	int currentTime = 0;
 	int testStartTime = 0;
@@ -10,8 +13,8 @@ public class Pipeline {
 	
 	int accumulatedValue = 0;
 
-	public void push(Codebase codebase) {
-		waitingForTest = codebase;
+	public void push(Build build) {
+		waitingForTest = build;
 		if(canPromoteToTest()){
 			promoteToTest();
 		}
@@ -27,14 +30,14 @@ public class Pipeline {
 		testStartTime = currentTime;
 	}
 
-	public Stages stageOf(Codebase c) {
-		if(waitingForTest == c){
+	public Stages stageOf(Build b) {
+		if(waitingForTest == b){
 			return Stages.WAITING_FOR_TEST;
 		}
-		if(inTest == c){
+		if(inTest == b){
 			return Stages.TEST;
 		}
-		if(inProd == c){
+		if(inProd == b){
 			return Stages.PROD;
 		}
 		return null;
@@ -58,10 +61,10 @@ public class Pipeline {
 	}
 
 	private boolean canPromoteToProd() {
-		return inTest!=null && validationTimeIsOver() && !inTest.detectsErrors();
+		return inTest!=null && isValidationTimeOver() && !inTest.detectsErrors();
 	}
 
-	private boolean validationTimeIsOver() {
+	private boolean isValidationTimeOver() {
 		return currentTime >= inTest.getValidationTime() + testStartTime;
 	}
 
@@ -73,6 +76,17 @@ public class Pipeline {
 
 	public int getAccumulatedValue() {
 		return accumulatedValue;
+	}
+
+	public Set<Integer> getDetectedErrors() {
+		if(inTest == null){
+			return new HashSet<Integer>();
+		}
+		return inTest.getDetectedErrorIds();
+	}
+
+	public Build getProductionBuild() {
+		return inProd;
 	}
 
 }

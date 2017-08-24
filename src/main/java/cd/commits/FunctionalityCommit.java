@@ -13,4 +13,7 @@ public class FunctionalityCommit extends Commit {
 		return value;
 	}
 
+	public String toString(){
+		return "Functionality - id:"+functionalityId+",value:"+value;
+	}
 }

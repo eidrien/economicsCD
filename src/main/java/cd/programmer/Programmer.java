@@ -1,6 +1,9 @@
 package cd.programmer;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 import cd.commits.Commit;
 import cd.commits.FixCommit;
@@ -13,8 +16,7 @@ public abstract class Programmer {
 	int maxFunctionalityValue = 100;
 	int maxTestExecutionTime = 100;
 	
-	boolean errorHasBeenDetected;
-	int functionalityIdWithError;
+	Set<Integer> functionalityIdsWithError;
 	
 	protected Random randomGenerator;
 	
@@ -49,7 +51,7 @@ public abstract class Programmer {
 	}
 
 	private boolean hasErrorBeenDetected() {
-		return errorHasBeenDetected;
+		return functionalityIdsWithError != null && !functionalityIdsWithError.isEmpty();
 	}
 
 	protected Commit codeFunctionality() {
@@ -59,20 +61,30 @@ public abstract class Programmer {
 	}
 
 	protected Commit codeFix() {
-		FixCommit fix = new FixCommit(functionalityIdWithError);
-		errorHasBeenDetected = false;
+		int functionalityToFix = getRandomItem(functionalityIdsWithError);
+		FixCommit fix = new FixCommit(functionalityToFix);
+		functionalityIdsWithError.remove(functionalityToFix);
 		return fix;
 	}
 	
+	private Integer getRandomItem(Set<Integer> items) {
+		int position = getRandomNumber(items.size());
+		Iterator<Integer> iterator = items.iterator();
+		Integer randomItem = iterator.next();
+		for(int i=0; i<position; i++){
+			randomItem = iterator.next();
+		}
+		return randomItem;
+	}
+
 	protected Commit codeTest() {
 		int functionalityId = getRandomNumber(maxFunctionalityId);
 		int executionTime = getRandomNumber(maxTestExecutionTime);
 		return new TestCommit(functionalityId, executionTime);
 	}
 	
-	public void errorDetected(int functionalityId) {
-		errorHasBeenDetected = true;
-		functionalityIdWithError = functionalityId;
+	public void errorsDetected(Set<Integer> ids) {
+		this.functionalityIdsWithError = new HashSet<Integer>(ids);
 	}
 
 	protected int getRandomNumber(int max){

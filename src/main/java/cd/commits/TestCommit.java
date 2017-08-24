@@ -13,4 +13,7 @@ public class TestCommit extends Commit {
 		return executionTime;
 	}
 
+	public String toString(){
+		return "Test - id:"+functionalityId+",time:"+executionTime;
+	}
 }
