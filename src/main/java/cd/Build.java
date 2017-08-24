@@ -64,8 +64,7 @@ public class Build {
 	}
 
 	public Set<Functionality> getErrors() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<Functionality>(errors);
 	}
 
 }
