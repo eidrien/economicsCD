@@ -85,8 +85,27 @@ public class Pipeline {
 		return inTest.getDetectedErrors();
 	}
 
-	public Build getProductionBuild() {
+	public Build getBuildIn(Stages stage) {
+		switch(stage){
+		case PROD: return inProd;
+		case TEST: return inTest;
+		case WAITING_FOR_TEST: return waitingForTest;
+		}
 		return inProd;
 	}
-
+	
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("Pipeline status=> ");
+		if(waitingForTest != null){
+			sb.append("WAIT:").append(waitingForTest.getId());
+		}
+		if(inTest != null){
+			sb.append(", TEST:").append(inTest.getId());
+		}
+		if(inProd != null){
+			sb.append(", PROD:").append(inProd.getId());
+		}
+		return sb.toString();
+	}
 }

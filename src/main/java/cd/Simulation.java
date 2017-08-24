@@ -36,7 +36,7 @@ public class Simulation {
 		for(Programmer programmer : programmers){
 			programmer.errorsDetected(detectedErrors);
 		}
-		
+		LOGGER.info(pipeline.toString());
 	}
 
 	private void addProgrammer(Programmer programmer) {
@@ -66,17 +66,20 @@ public class Simulation {
 	}
 
 	private String getStatistics() {
-		Build prod = pipeline.getProductionBuild();
+		Build prod = pipeline.getBuildIn(Stages.PROD);
+		Build test = pipeline.getBuildIn(Stages.TEST);
+		Build wait = pipeline.getBuildIn(Stages.WAITING_FOR_TEST);
 		StringBuffer sb = new StringBuffer();
-		sb.append("value:");
-		sb.append(prod.getValue());
-		sb.append(",total value:");
-		sb.append(pipeline.getAccumulatedValue());
-		sb.append(",test time:");
-		sb.append(prod.getValidationTime());
+		if(prod != null){
+			sb.append("PROD - ").append(prod.toString()).append("\n");
+		}
+		if(test != null){
+			sb.append("TEST - ").append(test.toString()).append("\n");
+		}
+		if(wait != null){
+			sb.append("WAIT - ").append(wait.toString()).append("\n");
+		}
 		return sb.toString();
 	}
-
-
 	
 }

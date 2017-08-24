@@ -50,4 +50,17 @@ public class Build {
 		return id;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Build => ");
+		sb.append("id:").append(id).append(", ");
+		sb.append("value:").append(getValue()).append(", ");
+		sb.append("test time:").append(getValidationTime()).append(", ");
+		sb.append("#functionalities:").append(numberOfFunctionalities).append(", ");
+		sb.append("#errors:").append(errors.size()).append(", ");
+		sb.append("#detected:").append(detectedErrors.size());
+		
+		return sb.toString();
+	}
+
 }
