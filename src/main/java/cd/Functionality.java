@@ -87,4 +87,9 @@ public class Functionality {
 		return validationTime;
 	}
 
+	public String toString(){
+		return "Functionality => id:"+id+", value:"+value+
+				", test:"+test+", validationTime:"+validationTime+
+				", error:"+error+", fatal:"+fatalError;
+	}
 }

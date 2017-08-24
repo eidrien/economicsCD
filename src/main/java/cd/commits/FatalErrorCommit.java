@@ -7,6 +7,6 @@ public class FatalErrorCommit extends Commit {
 	}
 
 	public String toString(){
-		return "FatalError - id:"+functionalityId;
+		return "Commit=> Type:FatalError, id:"+functionalityId;
 	}
 }

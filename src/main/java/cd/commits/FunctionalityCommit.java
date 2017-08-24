@@ -14,6 +14,6 @@ public class FunctionalityCommit extends Commit {
 	}
 
 	public String toString(){
-		return "Functionality - id:"+functionalityId+",value:"+value;
+		return "Commit=> Type:Functionality, id:"+functionalityId+",value:"+value;
 	}
 }

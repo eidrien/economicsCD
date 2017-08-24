@@ -7,6 +7,6 @@ public class FixCommit extends Commit {
 	}
 
 	public String toString(){
-		return "Fix - id:"+functionalityId;
+		return "Commit=> Type:Fix, id:"+functionalityId;
 	}
 }

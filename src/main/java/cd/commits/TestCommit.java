@@ -14,6 +14,6 @@ public class TestCommit extends Commit {
 	}
 
 	public String toString(){
-		return "Test - id:"+functionalityId+",time:"+executionTime;
+		return "Commit=> Type:Test, id:"+functionalityId+",time:"+executionTime;
 	}
 }
