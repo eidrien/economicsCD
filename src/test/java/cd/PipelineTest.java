@@ -4,10 +4,13 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import cd.commits.FatalErrorCommit;
 
 public class PipelineTest {
 
@@ -151,6 +154,32 @@ public class PipelineTest {
 		thenPipelineReturnsDetectedErrors(detectedErrors1);
 	}
 	
+	@Test
+	public void fatalErrorInProdShouldBeDetectedRightAway(){
+		HashSet<Functionality> fatalErrors = new HashSet<Functionality>();
+		fatalErrors.add(new Functionality(new FatalErrorCommit(12)));
+		fatalErrors.add(new Functionality(new FatalErrorCommit(23)));
+		Build b = givenBuildWithFatalErrorAndNoTests(fatalErrors);
+		whenRunThroughPipeline(b);
+		givenTimeStepsElapsed(1);
+		thenBuildIsIn(b,Stages.PROD);
+		thenFatalErrorsAreDetected(b, fatalErrors);
+	}
+	
+	private void thenFatalErrorsAreDetected(Build build, Set<Functionality> fatalErrors) {
+		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
+		assertEquals(fatalErrors.size(), detectedErrors.size());
+		assertTrue(fatalErrors.containsAll(detectedErrors));
+		assertTrue(detectedErrors.containsAll(fatalErrors));
+	}
+
+	private Build givenBuildWithFatalErrorAndNoTests(Set<Functionality> fatalErrors) {
+		Build b = Mockito.mock(Build.class);
+		when(b.detectsErrors()).thenReturn(false);
+		when(b.getErrors()).thenReturn(fatalErrors);
+		return b;
+	}
+
 	private Build givenBuildWithValidationTimeAndValue(int validationTime, int value) {
 		Build b = Mockito.mock(Build.class);
 		when(b.detectsErrors()).thenReturn(false);

@@ -79,10 +79,19 @@ public class Pipeline {
 	}
 
 	public Set<Functionality> getDetectedErrors() {
-		if(inTest == null){
-			return new HashSet<Functionality>();
+		HashSet<Functionality> detectedErrors = new HashSet<Functionality>();
+		if(inTest != null){
+			detectedErrors.addAll(inTest.getDetectedErrors());
 		}
-		return inTest.getDetectedErrors();
+		if(inProd != null){
+			Set<Functionality> errors = inProd.getErrors();
+			for(Functionality error : errors){
+				if(error.hasFatalError()){
+					detectedErrors.add(error);
+				}
+			}
+		}
+		return detectedErrors;
 	}
 
 	public Build getBuildIn(Stages stage) {

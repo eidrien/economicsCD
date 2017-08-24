@@ -63,4 +63,9 @@ public class Build {
 		return sb.toString();
 	}
 
+	public Set<Functionality> getErrors() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
