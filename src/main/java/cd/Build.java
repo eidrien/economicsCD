@@ -5,15 +5,16 @@ import java.util.Set;
 
 public class Build {
 	
+	private int id;
 	private Set<Functionality> errors;
 	private Set<Functionality> detectedErrors;
 	private int validationTime;
 	private int value;
 	private int numberOfFunctionalities;
 	
-	public Build(int value, int validationTime, int numberOfFunctionalities, 
+	public Build(int id, int value, int validationTime, int numberOfFunctionalities, 
 			Set<Functionality> errors, Set<Functionality> detectedErrors){
-		
+		this.id = id;
 		this.value = value;
 		this.validationTime = validationTime;
 		this.numberOfFunctionalities = numberOfFunctionalities;
@@ -43,6 +44,10 @@ public class Build {
 
 	public boolean detectsErrors() {
 		return !detectedErrors.isEmpty();
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

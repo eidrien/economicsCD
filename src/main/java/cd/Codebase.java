@@ -8,6 +8,7 @@ import cd.commits.Commit;
 public class Codebase {
 
 	Set<Functionality> functionalities;
+	int lastBuildId = 0;
 	
 	public Codebase(){
 		functionalities = new HashSet<Functionality>();
@@ -77,7 +78,8 @@ public class Codebase {
 
 
 	public Build build() {
-		return new Build(getValue(), getValidationTime(), getNumberOfFunctionalities(), 
+		lastBuildId++;
+		return new Build(lastBuildId, getValue(), getValidationTime(), getNumberOfFunctionalities(), 
 				getErrors(), getDetectedErrors());
 	}
 

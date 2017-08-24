@@ -149,6 +149,21 @@ public class CodebaseTest {
 		thenTestExecutionTimeIs(30);
 	}
 	
+	@Test
+	public void buildsShouldHaveIncrementalIds(){
+		givenNewCodebase();
+		whenBuildIsGenerated();
+		thenBuildIdIs(1);
+		whenBuildIsGenerated();
+		thenBuildIdIs(2);
+		whenBuildIsGenerated();
+		thenBuildIdIs(3);
+	}
+	
+	private void thenBuildIdIs(int id) {
+		assertEquals(id, build.getId());
+	}
+
 	private void thenTestExecutionTimeIs(int testExecutionTime) {
 		assertEquals(testExecutionTime, build.getValidationTime());
 	}
