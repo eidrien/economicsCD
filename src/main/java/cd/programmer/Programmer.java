@@ -1,8 +1,6 @@
 package cd.programmer;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.Set;
 
 import cd.Functionality;

@@ -11,6 +11,9 @@ import cd.commits.Commit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
 
+//TODO These tests should not have loops, 
+// they should make sure that the right method call is made to RandomGenerator
+
 public class PerfectProgrammerTest {
 
 	@Test
