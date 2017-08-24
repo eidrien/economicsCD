@@ -8,6 +8,6 @@ public class ErrorCommit extends Commit {
 	}
 
 	public String toString(){
-		return "Commit=> Type:Error, id:"+functionalityId;
+		return "Commit=> Type:Error, id:"+getFunctionalityId();
 	}
 }

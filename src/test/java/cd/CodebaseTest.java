@@ -2,6 +2,7 @@ package cd;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -87,18 +88,20 @@ public class CodebaseTest {
 		givenErrorCommitWithId(20);
 		givenTestCommitWithId(20);
 		whenBuildIsGenerated();
-		int[] functionalityIdsWithErrors = new int[] {1,20};
-		thenDetectsErrorsWithIds(functionalityIdsWithErrors);
+		Set<Integer> errorFunctionalityIds = new HashSet<Integer>();
+		errorFunctionalityIds.add(1);
+		errorFunctionalityIds.add(20);
+		thenDetectsErrorsWithIds(errorFunctionalityIds);
 	}
 	
 	private void whenBuildIsGenerated() {
 		build = codebase.build();
 	}
 
-	private void thenDetectsErrorsWithIds(int[] functionalityIdsWithErrors) {
-		Set<Integer> detectedErrorIds = build.getDetectedErrorIds();
-		for(int functionalityIdWithError : functionalityIdsWithErrors){
-			assertTrue(detectedErrorIds.contains(functionalityIdWithError));				
+	private void thenDetectsErrorsWithIds(Set<Integer> functionalityIdsWithErrors) {
+		Set<Functionality> detectedErrors = build.getDetectedErrors();
+		for(Functionality functionalityWithError : detectedErrors){
+			assertTrue(functionalityIdsWithErrors.contains(functionalityWithError.getId()));				
 		}
 	}
 

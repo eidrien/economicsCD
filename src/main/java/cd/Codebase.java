@@ -8,21 +8,19 @@ import cd.commits.Commit;
 public class Codebase {
 
 	Set<Functionality> functionalities;
-	Set<Integer> detectedErrorIds;
-
 	
 	public Codebase(){
 		functionalities = new HashSet<Functionality>();
-		detectedErrorIds = new HashSet<Integer>();
 	}
 	
-	private boolean hasErrors() {
+	private Set<Functionality> getErrors() {
+		HashSet<Functionality> errors = new HashSet<Functionality>();
 		for(Functionality functionality : functionalities){
 			if(functionality.hasError()){
-				return true;
+				errors.add(functionality);
 			}
 		}
-		return false;
+		return errors;
 	}
 	
 	public void addCommit(Commit commit) {
@@ -48,14 +46,14 @@ public class Codebase {
 		return functionalities.size();
 	}
 
-	private boolean detectsErrors() {
-		detectedErrorIds = new HashSet<Integer>();
+	private Set<Functionality> getDetectedErrors() {
+		HashSet<Functionality> detectedErrors = new HashSet<Functionality>();
 		for(Functionality functionality : functionalities){
 			if(functionality.isErrorDetected()){
-				detectedErrorIds.add(functionality.getId());
+				detectedErrors.add(functionality);
 			}
 		}
-		return !detectedErrorIds.isEmpty();
+		return detectedErrors;
 	}
 
 	private int getValue() {
@@ -77,14 +75,10 @@ public class Codebase {
 		return time;
 	}
 
-	private Set<Integer> getDetectedErrorIds() {
-		return detectedErrorIds;
-	}
 
 	public Build build() {
-		detectsErrors();
 		return new Build(getValue(), getValidationTime(), getNumberOfFunctionalities(), 
-				hasErrors(), getDetectedErrorIds());
+				getErrors(), getDetectedErrors());
 	}
 
 }

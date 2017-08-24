@@ -32,9 +32,9 @@ public class Simulation {
 			pipeline.push(codebase.build());
 		}
 		pipeline.timeStepElapsed();
-		Set<Integer> functionalitiesWithErrors = pipeline.getDetectedErrors();
+		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
 		for(Programmer programmer : programmers){
-			programmer.errorsDetected(functionalitiesWithErrors);
+			programmer.errorsDetected(detectedErrors);
 		}
 		
 	}

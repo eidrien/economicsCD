@@ -2,7 +2,7 @@ package cd.commits;
 
 public class Commit {
 
-	int functionalityId;
+	Integer functionalityId;
 	
 	public Commit(int functionalityId){
 		this.functionalityId = functionalityId;
@@ -14,10 +14,10 @@ public class Commit {
 	
 	public boolean equals(Object obj){
 		Commit other = (Commit)obj;
-		return other.getClass().equals(this.getClass()) && other.functionalityId == this.functionalityId;
+		return other.getClass().equals(this.getClass()) && other.getFunctionalityId() == this.getFunctionalityId();
 	}
 	
 	public int hashCode(){
-		return this.functionalityId;
+		return this.getFunctionalityId();
 	}
 }

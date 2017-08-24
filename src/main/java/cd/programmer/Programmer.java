@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import cd.Functionality;
 import cd.commits.Commit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
@@ -16,7 +17,7 @@ public abstract class Programmer {
 	int maxFunctionalityValue = 100;
 	int maxTestExecutionTime = 100;
 	
-	Set<Integer> functionalityIdsWithError;
+	Set<Functionality> detectedErrors;
 	
 	protected Random randomGenerator;
 	
@@ -51,7 +52,7 @@ public abstract class Programmer {
 	}
 
 	private boolean hasErrorBeenDetected() {
-		return functionalityIdsWithError != null && !functionalityIdsWithError.isEmpty();
+		return detectedErrors != null && !detectedErrors.isEmpty();
 	}
 
 	protected Commit codeFunctionality() {
@@ -61,16 +62,16 @@ public abstract class Programmer {
 	}
 
 	protected Commit codeFix() {
-		int functionalityToFix = getRandomItem(functionalityIdsWithError);
-		FixCommit fix = new FixCommit(functionalityToFix);
-		functionalityIdsWithError.remove(functionalityToFix);
+		Functionality functionalityToFix = getRandomItem(detectedErrors);
+		FixCommit fix = new FixCommit(functionalityToFix.getId());
+		detectedErrors.remove(functionalityToFix);
 		return fix;
 	}
 	
-	private Integer getRandomItem(Set<Integer> items) {
+	private Functionality getRandomItem(Set<Functionality> items) {
 		int position = getRandomNumber(items.size());
-		Iterator<Integer> iterator = items.iterator();
-		Integer randomItem = iterator.next();
+		Iterator<Functionality> iterator = items.iterator();
+		Functionality randomItem = iterator.next();
 		for(int i=0; i<position; i++){
 			randomItem = iterator.next();
 		}
@@ -83,8 +84,8 @@ public abstract class Programmer {
 		return new TestCommit(functionalityId, executionTime);
 	}
 	
-	public void errorsDetected(Set<Integer> ids) {
-		this.functionalityIdsWithError = new HashSet<Integer>(ids);
+	public void errorsDetected(Set<Functionality> ids) {
+		this.detectedErrors = new HashSet<Functionality>(ids);
 	}
 
 	protected int getRandomNumber(int max){

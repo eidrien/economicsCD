@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import cd.Functionality;
 import cd.commits.Commit;
 import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
@@ -80,9 +81,9 @@ public class ImperfectProgrammerTest {
 		int functionalityId = 1;
 		Commit commit = null;
 		do {
-			HashSet<Integer> bugIds = new HashSet<Integer>();
-			bugIds.add(functionalityId);
-			programmer.errorsDetected(bugIds);
+			HashSet<Functionality> bugs = new HashSet<Functionality>();
+			bugs.add(new Functionality(functionalityId));
+			programmer.errorsDetected(bugs);
 			commit = programmer.code();
 			commitsUntilFix++;
 		} while (!commit.getClass().equals(FixCommit.class));

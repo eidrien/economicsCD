@@ -78,11 +78,11 @@ public class Pipeline {
 		return accumulatedValue;
 	}
 
-	public Set<Integer> getDetectedErrors() {
+	public Set<Functionality> getDetectedErrors() {
 		if(inTest == null){
-			return new HashSet<Integer>();
+			return new HashSet<Functionality>();
 		}
-		return inTest.getDetectedErrorIds();
+		return inTest.getDetectedErrors();
 	}
 
 	public Build getProductionBuild() {

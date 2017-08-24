@@ -5,28 +5,28 @@ import java.util.Set;
 
 public class Build {
 	
-	private boolean hasErrors;
-	private Set<Integer> functionalitiesWithDetectedErrors;
+	private Set<Functionality> errors;
+	private Set<Functionality> detectedErrors;
 	private int validationTime;
 	private int value;
 	private int numberOfFunctionalities;
 	
 	public Build(int value, int validationTime, int numberOfFunctionalities, 
-			boolean hasErrors, Set<Integer> functionalitiesWithDetectedErrors){
+			Set<Functionality> errors, Set<Functionality> detectedErrors){
 		
 		this.value = value;
 		this.validationTime = validationTime;
 		this.numberOfFunctionalities = numberOfFunctionalities;
-		this.hasErrors = hasErrors;
-		this.functionalitiesWithDetectedErrors = new HashSet<Integer>(functionalitiesWithDetectedErrors);
+		this.errors = new HashSet<Functionality>(errors);
+		this.detectedErrors = new HashSet<Functionality>(detectedErrors);
 	}
 
 	public boolean hasErrors() {
-		return hasErrors;
+		return !errors.isEmpty();
 	}
 
-	public Set<Integer> getDetectedErrorIds() {
-		return new HashSet<Integer>(functionalitiesWithDetectedErrors);
+	public Set<Functionality> getDetectedErrors() {
+		return new HashSet<Functionality>(detectedErrors);
 	}
 
 	public int getValidationTime() {
@@ -42,7 +42,7 @@ public class Build {
 	}
 
 	public boolean detectsErrors() {
-		return !functionalitiesWithDetectedErrors.isEmpty();
+		return !detectedErrors.isEmpty();
 	}
 
 }

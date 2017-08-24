@@ -3,6 +3,7 @@ package cd.programmer;
 
 import java.util.Set;
 
+import cd.Functionality;
 import cd.commits.Commit;
 import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
@@ -43,9 +44,9 @@ public class ImperfectProgrammer extends Programmer {
 		return codeFixIfNeededOrFunctionality();
 	}
 
-	public void errorsDetected(Set<Integer> functionalityIds) {
+	public void errorsDetected(Set<Functionality> errorsDetected) {
 		if(chooseWithProbability(fixRate)){
-			super.errorsDetected(functionalityIds);
+			super.errorsDetected(errorsDetected);
 		}
 	}
 	

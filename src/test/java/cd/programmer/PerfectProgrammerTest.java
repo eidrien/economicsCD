@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import cd.Functionality;
 import cd.commits.Commit;
 import cd.commits.FixCommit;
 import cd.commits.FunctionalityCommit;
@@ -46,8 +47,8 @@ public class PerfectProgrammerTest {
 	@Test
 	public void fixesErrorsInmediately(){
 		Programmer programmer = new PerfectProgrammer();
-		HashSet<Integer> bugIds = new HashSet<Integer>();
-		bugIds.add(1);
+		HashSet<Functionality> bugIds = new HashSet<Functionality>();
+		bugIds.add(new Functionality(1));
 		programmer.errorsDetected(bugIds);
 		Commit commit = programmer.code();
 		assertEquals(FixCommit.class, commit.getClass());
@@ -58,8 +59,8 @@ public class PerfectProgrammerTest {
 	@Test
 	public void goesBackToAddingValueRightAfterFixingError(){
 		Programmer programmer = new PerfectProgrammer();
-		HashSet<Integer> bugIds = new HashSet<Integer>();
-		bugIds.add(1);
+		HashSet<Functionality> bugIds = new HashSet<Functionality>();
+		bugIds.add(new Functionality(1));
 		programmer.errorsDetected(bugIds);
 		programmer.code();
 		Commit code = programmer.code();

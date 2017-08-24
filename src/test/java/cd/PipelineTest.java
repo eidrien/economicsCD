@@ -122,28 +122,28 @@ public class PipelineTest {
 	@Test
 	public void returnErrorsOfFinishedBuildInTest(){
 		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
-		HashSet<Integer> detectedErrors = new HashSet<Integer>();
+		HashSet<Functionality> detectedErrors = new HashSet<Functionality>();
 		givenBuildWithDetectedErrors(b1, detectedErrors);
 		whenRunThroughPipeline(b1);
 		givenTimeStepsElapsed(5);
 		thenPipelineReturnsDetectedErrors(detectedErrors);
 	}
 	
-	private void thenPipelineReturnsDetectedErrors(HashSet<Integer> detectedErrors) {
+	private void thenPipelineReturnsDetectedErrors(HashSet<Functionality> detectedErrors) {
 		assertEquals(detectedErrors, pipeline.getDetectedErrors());
 	}
 
-	private void givenBuildWithDetectedErrors(Build build, HashSet<Integer> detectedErrors) {
-		when(build.getDetectedErrorIds()).thenReturn(detectedErrors);
+	private void givenBuildWithDetectedErrors(Build build, HashSet<Functionality> detectedErrors) {
+		when(build.getDetectedErrors()).thenReturn(detectedErrors);
 	}
 
 	@Test
 	public void returnsErrorsOfPreviouslyBuildIfCurrentTestIsOngoing(){
 		Build b1 = givenBuildWithValidationTimeAndValue(5, 10);
-		HashSet<Integer> detectedErrors1 = new HashSet<Integer>();
+		HashSet<Functionality> detectedErrors1 = new HashSet<Functionality>();
 		givenBuildWithDetectedErrors(b1, detectedErrors1);
 		Build b2 = givenBuildWithValidationTimeAndValue(10, 20);
-		HashSet<Integer> detectedErrors2 = new HashSet<Integer>();
+		HashSet<Functionality> detectedErrors2 = new HashSet<Functionality>();
 		givenBuildWithDetectedErrors(b1, detectedErrors2);
 		whenRunThroughPipeline(b1);
 		whenRunThroughPipeline(b2);

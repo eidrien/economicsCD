@@ -16,12 +16,16 @@ public class Functionality {
 	boolean test;
 	
 	public Functionality(Commit commit){
-		id = commit.getFunctionalityId();
-		value = validationTime = 0;
-		error = fatalError = test = false;
+		this(commit.getFunctionalityId());
 		addModification(commit);
 	}
 	
+	public Functionality(int id) {
+		this.id = id;
+		value = validationTime = 0;
+		error = fatalError = test = false;
+	}
+
 	public void addModification(Commit commit) {
 		if(commit.getClass().equals(FatalErrorCommit.class))
 			addFatalError();
