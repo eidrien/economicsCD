@@ -19,6 +19,7 @@ public abstract class Programmer {
 	int maxTestExecutionTime = 100;
 	
 	Set<Functionality> detectedErrors;
+	Set<Functionality> untested;
 	
 	public Programmer(){
 		random = new RandomGenerator();
@@ -75,6 +76,10 @@ public abstract class Programmer {
 	
 	public void errorsDetected(Set<Functionality> ids) {
 		this.detectedErrors = new HashSet<Functionality>(ids);
+	}
+
+	public void untestedFunctionalities(Set<Functionality> untestedFunctionalities) {
+		untested = untestedFunctionalities;
 	}
 
 }

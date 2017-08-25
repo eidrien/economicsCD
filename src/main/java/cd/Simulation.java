@@ -36,8 +36,10 @@ public class Simulation {
 		}
 		pipeline.timeStepElapsed();
 		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
+		Set<Functionality> untestedFunctionalities = pipeline.getUntestedFunctionalities();
 		for(Programmer programmer : programmers){
 			programmer.errorsDetected(detectedErrors);
+			programmer.untestedFunctionalities(untestedFunctionalities);
 		}
 		LOGGER.info(pipeline.toString());
 	}

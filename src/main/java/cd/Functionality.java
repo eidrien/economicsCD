@@ -100,4 +100,8 @@ public class Functionality {
 				", test:"+test+", validationTime:"+validationTime+
 				", error:"+error+", fatal:"+fatalError;
 	}
+
+	public boolean isTested() {
+		return test;
+	}
 }

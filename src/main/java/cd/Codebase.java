@@ -80,7 +80,17 @@ public class Codebase {
 	public Build build() {
 		lastBuildId++;
 		return new Build(lastBuildId, getValue(), getValidationTime(), getNumberOfFunctionalities(), 
-				getErrors(), getDetectedErrors());
+				getErrors(), getDetectedErrors(), getUntested());
+	}
+
+	private Set<Functionality> getUntested() {
+		HashSet<Functionality> untested = new HashSet<Functionality>();
+		for(Functionality functionality : functionalities){
+			if(!functionality.isTested()){
+				untested.add(functionality);
+			}
+		}
+		return untested;
 	}
 
 }

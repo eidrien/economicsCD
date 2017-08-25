@@ -149,4 +149,12 @@ public class Pipeline {
 		return sb.toString();
 	}
 
+	public HashSet<Functionality> getUntestedFunctionalities() {
+		HashSet<Functionality> untestedFunctionalities = new HashSet<Functionality>();
+		if(lastTested != null){
+			untestedFunctionalities.addAll(lastTested.getUntestedFunctionalities());
+		}
+		return untestedFunctionalities;
+	}
+
 }

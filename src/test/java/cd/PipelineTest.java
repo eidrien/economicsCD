@@ -169,20 +169,37 @@ public class PipelineTest {
 	@Test
 	public void errorsInProdAreDetectedAccordingToTheirValue(){
 		HashSet<Functionality> errors = new HashSet<Functionality>();
-		errors.add(createFunctionalityWithError(12,20));
-		Functionality f = createFunctionalityWithError(23,20);
-		errors.add(f);
+		Functionality f1 = createFunctionalityWithError(12,20);
+		errors.add(f1);
+		Functionality f2 = createFunctionalityWithError(23,20);
+		errors.add(f2);
 		Build b = givenBuildWithErrorsAndValue(errors, 100);		
 		whenRunThroughPipeline(b);
 		givenTimeStepsElapsed(1);
 		when(randomGenerator.chooseWithProbability(0.2)).thenReturn(true).thenReturn(false);
-		thenDetectedErrorsContains(f);
+		thenDetectedErrorsContains(f1, f2);
+	}
+	
+	@Test
+	public void getsUntestedFunctionalityFromLastBuildTested(){
+		Build b = givenBuildWithValidationTimeAndValue(5, 10);
+		HashSet<Functionality> untested = new HashSet<Functionality>();
+		untested.add(new Functionality(new FunctionalityCommit(1,10)));
+		when(b.getUntestedFunctionalities()).thenReturn(untested);
+		whenRunThroughPipeline(b);
+		givenTimeStepsElapsed(7);
+		thenPipelineReturnsUntestedFunctionalities(untested);
+		verify(b,times(1)).getUntestedFunctionalities();
+	}
+	
+	private void thenPipelineReturnsUntestedFunctionalities(HashSet<Functionality> expected) {
+		assertEquals(expected, pipeline.getUntestedFunctionalities());
 	}
 
-	private void thenDetectedErrorsContains(Functionality f) {
+	private void thenDetectedErrorsContains(Functionality f1, Functionality f2) {
 		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
 		assertEquals(1, detectedErrors.size());
-		assertTrue(detectedErrors.contains(f));
+		assertTrue(detectedErrors.contains(f1) || detectedErrors.contains(f2));
 	}
 
 	private Build givenBuildWithErrorsAndValue(HashSet<Functionality> errors, int value) {

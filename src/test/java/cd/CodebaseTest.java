@@ -94,6 +94,30 @@ public class CodebaseTest {
 		thenDetectsErrorsWithIds(errorFunctionalityIds);
 	}
 	
+	@Test
+	public void setsUntestedFunctionalitiesInBuild(){
+		givenNewCodebase();
+		givenFunctionalityCommit(1, 10);
+		givenFunctionalityCommit(2, 20);
+		givenFunctionalityCommit(3, 30);
+		givenFunctionalityCommit(4, 40);
+		givenTestCommitWithId(1);
+		givenTestCommitWithId(3);
+		whenBuildIsGenerated();
+		Set<Integer> untestedFunctionalityIds = new HashSet<Integer>();
+		untestedFunctionalityIds.add(2);
+		untestedFunctionalityIds.add(4);
+		thenFindsUntestedFeaturesWithIds(untestedFunctionalityIds);
+	}
+	
+	private void thenFindsUntestedFeaturesWithIds(Set<Integer> untestedFunctionalityIds) {
+		Set<Functionality> untestedFunctionalities = build.getUntestedFunctionalities();
+		assertEquals(untestedFunctionalities.size(), untestedFunctionalityIds.size());
+		for(Functionality untestedFunctionality : untestedFunctionalities){
+			assertTrue(untestedFunctionalityIds.contains(untestedFunctionality.getId()));				
+		}
+	}
+
 	private void whenBuildIsGenerated() {
 		build = codebase.build();
 	}

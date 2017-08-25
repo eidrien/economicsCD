@@ -8,18 +8,21 @@ public class Build {
 	private int id;
 	private Set<Functionality> errors;
 	private Set<Functionality> detectedErrors;
+	private Set<Functionality> untested;
 	private int validationTime;
 	private int value;
 	private int numberOfFunctionalities;
 	
 	public Build(int id, int value, int validationTime, int numberOfFunctionalities, 
-			Set<Functionality> errors, Set<Functionality> detectedErrors){
+			Set<Functionality> errors, Set<Functionality> detectedErrors,
+			Set<Functionality> untested){
 		this.id = id;
 		this.value = value;
 		this.validationTime = validationTime;
 		this.numberOfFunctionalities = numberOfFunctionalities;
 		this.errors = new HashSet<Functionality>(errors);
 		this.detectedErrors = new HashSet<Functionality>(detectedErrors);
+		this.untested = new HashSet<Functionality>(untested);
 	}
 
 	public boolean hasErrors() {
@@ -65,6 +68,10 @@ public class Build {
 
 	public Set<Functionality> getErrors() {
 		return new HashSet<Functionality>(errors);
+	}
+
+	public Set<Functionality> getUntestedFunctionalities() {
+		return untested;
 	}
 
 }
