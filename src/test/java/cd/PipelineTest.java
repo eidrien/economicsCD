@@ -12,15 +12,20 @@ import org.mockito.Mockito;
 
 import cd.commits.ErrorCommit;
 import cd.commits.FatalErrorCommit;
+import cd.commits.FunctionalityCommit;
+import utils.RandomGenerator;
 
 public class PipelineTest {
 
 	Pipeline pipeline;
 	Codebase codebase;
+	RandomGenerator randomGenerator; 
 	
 	@Before
 	public void setUp() throws Exception {
 		pipeline = new Pipeline();
+		randomGenerator = Mockito.mock(RandomGenerator.class);
+		pipeline.setRandomGenerator(randomGenerator);
 	}
 	
 	@Test
@@ -159,6 +164,38 @@ public class PipelineTest {
 		givenTimeStepsElapsed(1);
 		thenBuildIsIn(b,Stages.PROD);
 		thenFatalErrorsAreDetected(b, fatalErrors);
+	}
+	
+	@Test
+	public void errorsInProdAreDetectedAccordingToTheirValue(){
+		HashSet<Functionality> errors = new HashSet<Functionality>();
+		errors.add(createFunctionalityWithError(12,20));
+		Functionality f = createFunctionalityWithError(23,20);
+		errors.add(f);
+		Build b = givenBuildWithErrorsAndValue(errors, 100);		
+		whenRunThroughPipeline(b);
+		givenTimeStepsElapsed(1);
+		when(randomGenerator.chooseWithProbability(0.2)).thenReturn(true).thenReturn(false);
+		thenDetectedErrorsContains(f);
+	}
+
+	private void thenDetectedErrorsContains(Functionality f) {
+		Set<Functionality> detectedErrors = pipeline.getDetectedErrors();
+		assertEquals(1, detectedErrors.size());
+		assertTrue(detectedErrors.contains(f));
+	}
+
+	private Build givenBuildWithErrorsAndValue(HashSet<Functionality> errors, int value) {
+		Build b = Mockito.mock(Build.class);
+		when(b.getErrors()).thenReturn(errors);
+		when(b.getValue()).thenReturn(value);
+		return b;
+	}
+
+	private Functionality createFunctionalityWithError(int id, int value) {
+		Functionality f1 = new Functionality(new ErrorCommit(id));
+		f1.addModification(new FunctionalityCommit(id,value));
+		return f1;
 	}
 		
 	private void thenPipelineReturnsDetectedErrors(HashSet<Functionality> expectedErrors) {

@@ -10,7 +10,7 @@ import cd.commits.TestCommit;
 public class Functionality {
 
 	int id;
-	int value;
+	int potentialValue;
 	int validationTime;
 	boolean error, fatalError;
 	boolean test;
@@ -22,7 +22,7 @@ public class Functionality {
 	
 	public Functionality(int id) {
 		this.id = id;
-		value = validationTime = 0;
+		potentialValue = validationTime = 0;
 		error = fatalError = test = false;
 	}
 
@@ -41,7 +41,7 @@ public class Functionality {
 	}
 
 	private void addValue(int value2) {
-		value += value2;
+		potentialValue += value2;
 	}
 
 	private void addError() {
@@ -75,12 +75,16 @@ public class Functionality {
 		return id;
 	}
 
-	public int getValue() {
+	public int getValueInProd() {
 		if(error){
 			return 0;
 		}else{
-			return value;
+			return potentialValue;
 		}
+	}
+	
+	public int getPotentialValue(){
+		return potentialValue;
 	}
 
 	public boolean hasFatalError() {
@@ -92,7 +96,7 @@ public class Functionality {
 	}
 
 	public String toString(){
-		return "Functionality => id:"+id+", value:"+value+
+		return "Functionality => id:"+id+", value:"+potentialValue+
 				", test:"+test+", validationTime:"+validationTime+
 				", error:"+error+", fatal:"+fatalError;
 	}

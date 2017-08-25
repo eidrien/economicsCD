@@ -3,6 +3,8 @@ package cd;
 import java.util.HashSet;
 import java.util.Set;
 
+import utils.RandomGenerator;
+
 public class Pipeline {
 	
 	Build waitingForTest, inTest, lastTested, inProd;
@@ -12,6 +14,12 @@ public class Pipeline {
 	int prodDeployTime = 0;
 	
 	int accumulatedValue = 0;
+
+	private RandomGenerator randomGenerator;
+	
+	public void setRandomGenerator(RandomGenerator randomGenerator) {
+		this.randomGenerator = randomGenerator;
+	}
 
 	public void push(Build build) {
 		waitingForTest = build;
@@ -100,6 +108,13 @@ public class Pipeline {
 			for(Functionality error : errors){
 				if(error.hasFatalError()){
 					detectedErrors.add(error);
+				}else{
+					int buildValue = inProd.getValue();
+					int featureValue = error.getPotentialValue();
+					double probabilityOfDetection = (double)featureValue/(double)buildValue;
+					if(randomGenerator.chooseWithProbability(probabilityOfDetection)){
+						detectedErrors.add(error);
+					}
 				}
 			}
 		}
@@ -133,4 +148,5 @@ public class Pipeline {
 		}
 		return sb.toString();
 	}
+
 }

@@ -152,7 +152,7 @@ public class FunctionalityTest {
 	}
 
 	private void thenFunctionalityValueIs(int value) {
-		assertEquals(value, functionality.getValue());
+		assertEquals(value, functionality.getValueInProd());
 	}
 
 	private void givenFix() {

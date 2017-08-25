@@ -63,7 +63,7 @@ public class Codebase {
 			if(functionality.hasFatalError()){
 				return 0;
 			}
-			value += functionality.getValue();
+			value += functionality.getValueInProd();
 		}
 		return value;
 	}
